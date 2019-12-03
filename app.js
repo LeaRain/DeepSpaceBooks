@@ -6,6 +6,7 @@ const session = require("express-session");
 
 // Instead of using a connection string, for local use and development, there is a simple connection with my own "server".
 // Yes, there isn't a password and for local development, this is okay, I'm the only person with access to my database in my networks.
+// TODO: Change to heroku and connection string (finally, at the end)
 let dbClient = new pg.Client({
     host: "localhost",
     user: "weirdjs",
