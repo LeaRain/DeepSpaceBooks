@@ -4,7 +4,10 @@ html
     meta(charset="UTF-8")
     meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
     block title
-    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css")
+    // Changing linked bootstrap.css to own hosted bootstrap.css -> Control of own css in case for downtime of bootstrap server, data sovereignty
+    // Choosing of a dark theme, suitable for a project called "Deep Space Books"
+    style
+      include ./styles/bootstrap.css
 
   body
     div(class="container")

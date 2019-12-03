@@ -1,16 +1,17 @@
-var express = require("express");
-var pg = require("pg");
-var bodyParser = require("body-parser");
-var session = require("express-session");
+// Required modules are set to const -> They won't be change in the process, they are some kind of static, so change to constant
+const express = require("express");
+const pg = require("pg");
+const bodyParser = require("body-parser");
+const session = require("express-session");
 
-var CON_STRING = process.env.DB_CON_STRING;
-if (CON_STRING == undefined) {
-    console.log("Error: Environment variable DB_CON_STRING not set!");
-    process.exit(1);
-}
+// Instead of using a connection string, for local use and development, there is a simple connection with my own "server".
+// Yes, there isn't a password and for local development, this is okay, I'm the only person with access to my database in my networks.
+let dbClient = new pg.Client({
+    host: "localhost",
+    user: "weirdjs",
+    database: "jsexercise"
+});
 
-pg.defaults.ssl = true;
-var dbClient = new pg.Client(CON_STRING);
 dbClient.connect();
 
 var urlencodedParser = bodyParser.urlencoded({
@@ -35,5 +36,5 @@ app.get("/", function (req, res) {
 });
 
 app.listen(PORT, function () {
-    console.log(`Shopping App listening on Port ${PORT}`);
+    console.log("Deep Space Books listening on Port ${PORT}");
 });
