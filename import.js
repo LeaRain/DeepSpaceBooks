@@ -26,21 +26,16 @@ function main(){
 
     inputStream
         .pipe(csvReader({ parseNumbers: true, parseBooleans: true, trim: true }))
-        .on('data', function (row) {
+        .on("data", function (row) {
             // There are some columns author columns with two names -> splitting and as another result, all columns
             // are in an array, so there is an equal data structure for all arrays
             row[2] = row[2].split(",");
 
-            //console.log('A row arrived: ', row);
             // The first row isn't necessary because there is only a description
             if (count_rows > 0) {
                 insertBookData(row, databaseConnection);
             }
             count_rows++;
-        })
-        .on('end', function (data) {
-            // Terminates the process effectively
-            //process.exit();
         })
 }
 
@@ -60,42 +55,29 @@ function tryCreateTable(databaseConnection){
     });
 }
 
+// If insertBookData is called with an already existing table with all the necessary data, a database error will occur because isbn is per definition of table an unique value
 function insertBookData(rowData, databaseConnection){
-    let isbn = rowData[0];
-    let title = rowData[1];
-    let publishYear = rowData[3];
-    let author = rowData[2][0];
-    let coauthor = rowData[2][1];
-    
-    if (rowData[2].length < 2){
-        const insertQuery = "INSERT into book_information (title, author, isbn, publish_year) VALUES ($1, $2, $3, $4);";
-        const insertValues = [title, author, isbn, publishYear];
+    // Define the constant factors of this function, including different data specifications and queries with values, it would also be possible to ignore isbn, title, publishYear, author and coauthor but readability is a thing.
+    const isbn = rowData[0];
+    const title = rowData[1];
+    const publishYear = rowData[3];
+    const author = rowData[2][0];
+    const coauthor = rowData[2][1];
 
-        databaseConnection.query(insertQuery, insertValues, function(dbError, dbResponse) {
-            if (dbError){
-                // Potential error as log entry
-                console.log("Error occurred:" + dbError);
-            }
-            else{
-                console.log("Success!")
-            }
-        });
-    }
+    // Insert statement and parameters have a coauthor but if there is only one author, coauthor is undefined -> no insert for coauthor
+    const insertQuery = "INSERT into book_information (title, author, coauthor, isbn, publish_year) VALUES ($1, $2, $3, $4, $5);";
+    const insertValues = [title, author, coauthor, isbn, publishYear];
 
-    else{
-        const insertQuery = "INSERT into book_information (title, author, coauthor, isbn, publish_year) VALUES ($1, $2, $3, $4, $5);";
-        const insertValues = [title, author, coauthor, isbn, publishYear];
-
-        databaseConnection.query(insertQuery, insertValues, function(dbError, dbResponse) {
-            if (dbError){
-                // Potential error as log entry
-                console.log("Error occurred:" + dbError);
-            }
-            else{
-                console.log("Success!")
-            }
-        });
-    }
+    databaseConnection.query(insertQuery, insertValues, function(dbError, dbResponse) {
+        if (dbError){
+            // Potential error as log entry
+            console.log("Error occurred while inserting:" + dbError);
+        }
+        else{
+            // More precise information about success
+            console.log("Data inserted successfully!");
+        }
+    });
 }
 
 main();
