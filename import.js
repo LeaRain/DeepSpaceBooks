@@ -15,9 +15,7 @@ function main(){
     let databaseConnection = initDatabase();
     databaseConnection.connect();
 
-    databaseConnection.query("SELECT mate_type, amount FROM mate;", function(dbError, dbResponse) {
-        console.log("test" + dbResponse.rows);
-    });
+    tryCreateTable(databaseConnection);
 
     // Choosing directory to .csv, utf8 as encoding (today's standard unicode)
     let inputStream = fs.createReadStream("sources/books.csv", "utf8");
@@ -35,7 +33,7 @@ function main(){
             // are in an array, so there is an equal data structure for all arrays
             row[2] = row[2].split(",");
 
-            console.log('A row arrived: ', row);
+            //console.log('A row arrived: ', row);
             // The first row isn't necessary because there is only a description
             if (count_rows > 0) {
                 data_array.push(row);
@@ -43,8 +41,31 @@ function main(){
             count_rows++;
         })
         .on('end', function (data) {
-            console.log('No more rows!');
+            console.log("No more rows!")
+            // Terminates the process effectively
+            //process.exit();
+        })
+
+        .on('close', function (err) {
+            console.log('Stream has been destroyed and file has been closed');
         });
+
+}
+
+function tryCreateTable(databaseConnection){
+    // Definition of table in one static string -> more clarity
+    // book_id as primary key, ISBN could have been a possibility, but ids out of the database are more easy to handle for foreign keys and joins. ISBN is in fact unique, so there is an unique tag. All other varchars have a generous size, the possibility of a second author is realized in a column for coauthor. A year has to be larger than 0 so a long journey to the past is prevented.
+    // There is also the possibility of an already existing table
+    const tableDefinition = "CREATE TABLE IF NOT EXISTS book_information (book_id SERIAL PRIMARY KEY, title VARCHAR(200) NOT NULL, author VARCHAR(200) NOT NULL, coauthor VARCHAR(200), isbn VARCHAR(10) NOT NULL UNIQUE, publish_year SMALLINT NOT NULL CHECK (publish_year > 0));";
+    databaseConnection.query(tableDefinition, function(dbError, dbResponse) {
+        if (dbError){
+            // Potential error as log entry
+            console.log("Error occurred:" + dbError);
+        }
+        else{
+            console.log("Table was created (or found) successfully.")
+        }
+    });
 }
 
 main();
