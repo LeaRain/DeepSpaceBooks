@@ -23,8 +23,6 @@ function main(){
     // count_rows counts the rows of the .csv file and is used for detecting an unnecessary line and can be used for debugging
     // (5000 books are required)
     let count_rows = 0;
-    // data_array as base for database input TODO: database input
-    let data_array = [];
 
     inputStream
         .pipe(csvReader({ parseNumbers: true, parseBooleans: true, trim: true }))
@@ -36,20 +34,14 @@ function main(){
             //console.log('A row arrived: ', row);
             // The first row isn't necessary because there is only a description
             if (count_rows > 0) {
-                data_array.push(row);
+                insertBookData(row, databaseConnection);
             }
             count_rows++;
         })
         .on('end', function (data) {
-            console.log("No more rows!")
             // Terminates the process effectively
             //process.exit();
         })
-
-        .on('close', function (err) {
-            console.log('Stream has been destroyed and file has been closed');
-        });
-
 }
 
 function tryCreateTable(databaseConnection){
@@ -66,6 +58,44 @@ function tryCreateTable(databaseConnection){
             console.log("Table was created (or found) successfully.")
         }
     });
+}
+
+function insertBookData(rowData, databaseConnection){
+    let isbn = rowData[0];
+    let title = rowData[1];
+    let publishYear = rowData[3];
+    let author = rowData[2][0];
+    let coauthor = rowData[2][1];
+    
+    if (rowData[2].length < 2){
+        const insertQuery = "INSERT into book_information (title, author, isbn, publish_year) VALUES ($1, $2, $3, $4);";
+        const insertValues = [title, author, isbn, publishYear];
+
+        databaseConnection.query(insertQuery, insertValues, function(dbError, dbResponse) {
+            if (dbError){
+                // Potential error as log entry
+                console.log("Error occurred:" + dbError);
+            }
+            else{
+                console.log("Success!")
+            }
+        });
+    }
+
+    else{
+        const insertQuery = "INSERT into book_information (title, author, coauthor, isbn, publish_year) VALUES ($1, $2, $3, $4, $5);";
+        const insertValues = [title, author, coauthor, isbn, publishYear];
+
+        databaseConnection.query(insertQuery, insertValues, function(dbError, dbResponse) {
+            if (dbError){
+                // Potential error as log entry
+                console.log("Error occurred:" + dbError);
+            }
+            else{
+                console.log("Success!")
+            }
+        });
+    }
 }
 
 main();
