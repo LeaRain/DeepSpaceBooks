@@ -36,6 +36,18 @@ app.get("/", function (req, res) {
     res.render("index");
 });
 
+// Test function for checking the simple functioning of the registry button
+app.post("/registrationBtn", function (req, res) {
+   console.log("Registration was clicked!");
+   res.redirect("/");
+});
+
+// Test function for checking the simple functioning of the post button
+app.post("/loginBtn", function (req, res) {
+    console.log("Login was clicked!");
+    res.redirect("/");
+});
+
 app.listen(PORT, function () {
     console.log("Deep Space Books listening on Port ${PORT}");
 });
