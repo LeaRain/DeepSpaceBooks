@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^3.0.7",
+    "body-parser": "latest",
     "csv-reader": "^1.0.3",
     "express": "^4.16.4",
     "express-session": "^1.15.6",

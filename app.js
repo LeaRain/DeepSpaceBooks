@@ -4,6 +4,10 @@ const pg = require("pg");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 
+// Encryption library for hashing passwords
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
+
 // Instead of using a connection string, for local use and development, there is a simple connection with my own "server".
 // Yes, there isn't a password and for local development, this is okay, I'm the only person with access to my database in my networks.
 // TODO: Change to heroku and connection string (finally, at the end)
@@ -15,13 +19,13 @@ let dbClient = new pg.Client({
 
 dbClient.connect();
 
-var urlencodedParser = bodyParser.urlencoded({
+const urlencodedParser = bodyParser.urlencoded({
     extended: false
 });
 
 const PORT = 3000;
 
-var app = express();
+const app = express();
 
 app.use(session({
     secret: "This is a secret!",
@@ -36,15 +40,34 @@ app.get("/", function (req, res) {
     res.render("index");
 });
 
-// Test function for checking the simple functioning of the registry button
-app.post("/registrationBtn", function (req, res) {
-   console.log("Registration was clicked!");
-   res.redirect("/");
-});
+
 
 // Test function for checking the simple functioning of the post button
-app.post("/loginBtn", function (req, res) {
-    console.log("Login was clicked!");
+app.post("/loginBtn", urlencodedParser, function (req, res) {
+    let username = req.body.loginUsername;
+    let password = req.body.loginPassword;
+
+    // Empty username and password aren't allowed TODO: Warning and input check
+    if (username != "" && password !=""){
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+            bcrypt.hash(password, salt, function(err, hash) {
+                const selectQuery = "SELECT password_hash FROM user_data where username=$1;";
+                const userValue = [username];
+
+                dbClient.query(selectQuery, userValue, function(dbError, dbResponse) {
+                    console.log(dbResponse.rows);
+                    if (dbResponse.rows[0] == password){
+                        // TODO: Successful login
+                    }
+                    else{
+                        // TODO: Warning
+                    }
+
+                });
+            });
+        });
+    }
+
     res.redirect("/");
 });
 

@@ -30,22 +30,24 @@ block content
               th(scope="col") You and your books finally count!
 
         // Button needs to be in a form for possible action to node.js
-        form(method="post", action="registrationBtn")
+        form(method="post", action="registration")
           button(type="submit", class="btn btn-primary btn-lg btn-block") Register Now!
 
     div(class="col-lg-6")
       div(class="bs-component")
         h2 Already an account?
         p(class="lead") Login here!
-        div(class="form-group")
-          label Username
-          input(type="email" class="form-control" id="LoginEmail" aria-describedby="emailHelp" placeholder="Enter username")
-          small(id="emailHelp" class="form-text text-muted") Please enter your username
 
-        div(class="form-group")
-          label Password
-          input(type="password" class="form-control" id="LoginPassword" placeholder="Password")
-          small(id="passwordHelp" class="form-text text-muted") Please enter your password
+          form(method="post", action="loginBtn")
+            div(class="form-group")
+              label Username
+              input(type="username", class="form-control", id="loginUsername", name="loginUsername", aria-describedby="usernameHelp", placeholder="Enter username")
+              small(id="usernameHelp", class="form-text text-muted") Please enter your username
 
-        form(method="post", action="loginBtn")
-          button(type="submit", class="btn btn-primary btn-lg btn-block") Log me in!
+            div(class="form-group")
+              label Password
+              input(type="password", class="form-control", id="loginPassword", name="loginPassword", placeholder="Password")
+              small(id="passwordHelp", class="form-text text-muted") Please enter your password
+
+            div(class="form-group")
+              button(type="submit", class="btn btn-primary btn-lg btn-block") Log me in!
