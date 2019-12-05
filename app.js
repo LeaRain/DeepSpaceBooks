@@ -41,8 +41,7 @@ app.get("/", function (req, res) {
 });
 
 // Test function for checking the simple functioning of the registry button
-app.post("/registration", function (req, res) {
-    console.log("Registration was clicked!");
+app.get("/registration", function (req, res) {
     res.render("registration");
 });
 

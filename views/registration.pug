@@ -4,3 +4,22 @@ block content
     h1 Registration at Deep Space Books!
 
     p(class="lead") The world's deepest book review place!
+
+    form(method="post", action="loginBtn")
+        div(class="form-group")
+            label Username
+            input(type="username", class="form-control", id="loginUsername", name="loginUsername", aria-describedby="usernameHelp", placeholder="Enter username")
+            small(id="usernameHelp", class="form-text text-muted") Please enter your username
+
+        div(class="form-group")
+            label Password
+            input(type="password", class="form-control", id="loginPassword", name="loginPassword", placeholder="Password")
+            small(id="passwordHelp", class="form-text text-muted") Please enter your password
+
+        div(class="form-group")
+            label Verify Password
+            input(type="password", class="form-control", id="loginPasswordVerify", name="loginPassword", placeholder="Password")
+            small(id="passwordHelpVerify", class="form-text text-muted") Please enter your password again
+
+        div(class="form-group")
+            button(type="submit", class="btn btn-primary btn-lg btn-block") Register!
