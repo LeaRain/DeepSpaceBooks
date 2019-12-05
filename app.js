@@ -40,7 +40,11 @@ app.get("/", function (req, res) {
     res.render("index");
 });
 
-
+// Test function for checking the simple functioning of the registry button
+app.post("/registration", function (req, res) {
+    console.log("Registration was clicked!");
+    res.render("registration");
+});
 
 // Test function for checking the simple functioning of the post button
 app.post("/loginBtn", urlencodedParser, function (req, res) {
