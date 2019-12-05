@@ -1,14 +1,30 @@
-doctype html
-html
-  head
-    meta(charset="UTF-8")
-    meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
-    block title
-    // Changing linked bootstrap.css to own hosted bootstrap.css -> Control of own css in case for downtime of bootstrap server, data sovereignty
-    // Choosing of a dark theme, suitable for a project called "Deep Space Books"
-    style
-      include ./styles/bootstrap.css
+extends layout.pug
 
-  body
-    div(class="container")
-      h1 Let's start coding books...
+block content
+  h1 Welcome at Deep Space Books!
+
+  p(class="lead") The world's deepest book review place!
+
+  div(class="row")
+    div(class="col-lg-6")
+      div(class="bs-component")
+        p New here? You can register! Our advantages:
+        table(class="table table-hover")
+          thead
+            tr(class="table-primary")
+              th(scope="col") Your local book community: Meet other book lovers
+
+            tr(class="table-info")
+              th(scope="col") Find and review books in high speed
+
+            tr(class="table-secondary")
+              th(scope="col") Elegant and modern interfaces
+
+            tr(class="table-primary")
+              th(scope="col") Big book database
+
+            tr(class="table-info")
+              th(scope="col") Helpful reviews
+
+            tr(class="table-secondary")
+              th(scope="col") You and your books finally count!
