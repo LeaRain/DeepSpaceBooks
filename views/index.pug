@@ -1,53 +1,65 @@
-extends layout.pug
+doctype html
+html
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
+    // Changing linked bootstrap.css to own hosted bootstrap.css -> Control of own css in case for downtime of bootstrap server, data sovereignty
+    // Choosing of a dark theme, suitable for a project called "Deep Space Books"
+    style
+      include ./styles/bootstrap.css
 
-block content
-  h1 Welcome at Deep Space Books!
 
-  p(class="lead") The world's deepest book review place!
 
-  div(class="row")
-    div(class="col-lg-6")
-      div(class="bs-component")
-        p(class="lead") New here? You can register! Our advantages:
-        table(class="table table-hover")
-          thead
-            tr(class="table-primary")
-              th(scope="col") Your local book community: Meet other book lovers
+  body
+    div(class="container")
+      block content
+        h1 Welcome at Deep Space Books!
 
-            tr(class="table-info")
-              th(scope="col") Find and review books in high speed
+        p(class="lead") The world's deepest book review place!
 
-            tr(class="table-secondary")
-              th(scope="col") Elegant and modern interfaces
+        div(class="row")
+          div(class="col-lg-6")
+            div(class="bs-component")
+              p(class="lead") New here? You can register! Our advantages:
+              table(class="table table-hover")
+                thead
+                  tr(class="table-primary")
+                    th(scope="col") Your local book community: Meet other book lovers
 
-            tr(class="table-primary")
-              th(scope="col") Big book database
+                  tr(class="table-info")
+                    th(scope="col") Find and review books in high speed
 
-            tr(class="table-info")
-              th(scope="col") Helpful reviews
+                  tr(class="table-secondary")
+                    th(scope="col") Elegant and modern interfaces
 
-            tr(class="table-secondary")
-              th(scope="col") You and your books finally count!
+                  tr(class="table-primary")
+                    th(scope="col") Big book database
 
-        // Button needs to be in a form for possible action to node.js
-        form(method="get", action="registration")
-          button(type="submit", class="btn btn-primary btn-lg btn-block") Register Now!
+                  tr(class="table-info")
+                    th(scope="col") Helpful reviews
 
-    div(class="col-lg-6")
-      div(class="bs-component")
-        h2 Already an account?
-        p(class="lead") Login here!
+                  tr(class="table-secondary")
+                    th(scope="col") You and your books finally count!
 
-          form(method="post", action="loginBtn")
-            div(class="form-group")
-              label Username
-              input(type="username", class="form-control", id="loginUsername", name="loginUsername", aria-describedby="usernameHelp", placeholder="Enter username")
-              small(id="usernameHelp", class="form-text text-muted") Please enter your username
+            // Button needs to be in a form for possible action to node.js
+            form(method="get", action="registration")
+              button(type="submit", class="btn btn-primary btn-lg btn-block") Register Now!
 
-            div(class="form-group")
-              label Password
-              input(type="password", class="form-control", id="loginPassword", name="loginPassword", placeholder="Password")
-              small(id="passwordHelp", class="form-text text-muted") Please enter your password
+          div(class="col-lg-6")
+            div(class="bs-component")
+              h2 Already an account?
+              p(class="lead") Login here!
 
-            div(class="form-group")
-              button(type="submit", class="btn btn-primary btn-lg btn-block") Log me in!
+              form(method="post", action="loginBtn")
+                div(class="form-group")
+                  label Username
+                  input(type="username", class="form-control", id="loginUsername", name="loginUsername", aria-describedby="usernameHelp", placeholder="Enter username")
+                  small(id="usernameHelp", class="form-text text-muted") Please enter your username
+
+                div(class="form-group")
+                  label Password
+                  input(type="password", class="form-control", id="loginPassword", name="loginPassword", placeholder="Password")
+                  small(id="passwordHelp", class="form-text text-muted") Please enter your password
+
+                div(class="form-group")
+                  button(type="submit", class="btn btn-primary btn-lg btn-block") Log me in!

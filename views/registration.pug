@@ -1,25 +1,39 @@
-extends layout.pug
+doctype html
+html
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
+        // Changing linked bootstrap.css to own hosted bootstrap.css -> Control of own css in case for downtime of bootstrap server, data sovereignty
+        // Choosing of a dark theme, suitable for a project called "Deep Space Books"
+        style
+            include ./styles/bootstrap.css
 
-block content
-    h1 Registration at Deep Space Books!
+        block scripts
+            script(type="text/javascript")
+                include ./js/fieldcheck.js
 
-    p(class="lead") The world's deepest book review place!
+    body(onload="initChecking()")
+        div(class="container")
+            block content
+                h1 Registration at Deep Space Books!
 
-    form(method="post", action="registrationBtn")
-        div(class="form-group")
-            label Username
-            input(type="username", class="form-control", id="registrationUsername", name="registrationUsername", aria-describedby="usernameHelp", placeholder="Enter username")
-            small(id="usernameHelp", class="form-text text-muted") Please enter your username
+                p(class="lead") The world's deepest book review place!
 
-        div(class="form-group")
-            label Password
-            input(type="password", class="form-control", id="registrationPassword", name="registrationPassword", placeholder="Password")
-            small(id="passwordHelp", class="form-text text-muted") Please enter your password
+                form(method="post", action="registrationBtn")
+                    div(class="form-group")
+                        label Username
+                        input(type="username", class="form-control", id="registrationUsername", name="registrationUsername", aria-describedby="usernameHelp", placeholder="Enter username")
+                        small(id="usernameHelp", class="form-text text-muted") Please enter your username
 
-        div(class="form-group")
-            label Verify Password
-            input(type="password", class="form-control", id="registrationVerifyPassword", name="registrationVerifyPassword", placeholder="Password")
-            small(id="passwordHelpVerify", class="form-text text-muted") Please enter your password again
+                    div(class="form-group")
+                        label Password
+                        input(type="password", class="form-control", id="registrationPassword", name="registrationPassword", placeholder="Password")
+                        small(id="passwordHelp", class="form-text text-muted") Please enter your password
 
-        div(class="form-group")
-            button(type="submit", class="btn btn-primary btn-lg btn-block") Register!
+                    div(class="form-group")
+                        label Verify Password
+                        input(type="password", class="form-control", id="registrationVerifyPassword", name="registrationVerifyPassword", placeholder="Password")
+                        small(id="passwordHelpVerify", class="form-text text-muted") Please enter your password again
+
+                    div(class="form-group")
+                        button(type="submit", class="btn btn-primary btn-lg btn-block") Register!

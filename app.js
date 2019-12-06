@@ -16,7 +16,6 @@ let dbClient = new pg.Client({
     user: "weirdjs",
     database: "jsexercise"
 });
-
 dbClient.connect();
 
 const urlencodedParser = bodyParser.urlencoded({
