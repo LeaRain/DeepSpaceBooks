@@ -45,6 +45,42 @@ app.get("/registration", function (req, res) {
     res.render("registration");
 });
 
+app.post("/registrationBtn", urlencodedParser, function (req, res) {
+    let username = req.body.registrationUsername;
+    let password = req.body.registrationPassword;
+
+    // TODO: check in form for equivalent passwords
+    const selectQuery = "SELECT * FROM user_data WHERE username=$1;";
+    const userValue = [username];
+
+    dbClient.query(selectQuery, userValue, function(dbError, dbResponse) {
+        // If the 0th element of the array with the database query result contains an undefined
+        if (dbResponse.rows[0] === undefined){
+            bcrypt.genSalt(saltRounds, function(err, salt) {
+                bcrypt.hash(password, salt, function(err, hash) {
+                    const insertQuery = "INSERT INTO user_data (username, password_hash) VALUES ($1, $2);";
+                    const insertValues = [username, hash];
+
+                    dbClient.query(insertQuery, insertValues, function (dbError, dbResponse) {
+                        if (!dbError){
+                            console.log("Success!");
+                        }
+                        else{
+                            console.log(dbError);
+                        }
+
+                    })
+                });
+            });
+        }
+
+        else{
+            console.log("Username not available");
+        }
+
+    });
+});
+
 // Test function for checking the simple functioning of the post button
 app.post("/loginBtn", urlencodedParser, function (req, res) {
     let username = req.body.loginUsername;
@@ -65,12 +101,10 @@ app.post("/loginBtn", urlencodedParser, function (req, res) {
                     else{
                         // TODO: Warning
                     }
-
                 });
             });
         });
     }
-
     res.redirect("/");
 });
 
