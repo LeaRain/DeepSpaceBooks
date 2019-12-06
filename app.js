@@ -47,37 +47,42 @@ app.get("/registration", function (req, res) {
 app.post("/registrationBtn", urlencodedParser, function (req, res) {
     let username = req.body.registrationUsername;
     let password = req.body.registrationPassword;
+    let verifyPassword = req.body.registrationVerifyPassword;
 
-    // TODO: check in form for equivalent passwords
-    const selectQuery = "SELECT * FROM user_data WHERE username=$1;";
-    const userValue = [username];
+    if (verifyPassword !== password){
+        res.render("registrationerror", {error: "Your passwords are not the same."})
+    }
 
-    dbClient.query(selectQuery, userValue, function(dbError, dbResponse) {
-        // If the 0th element of the array with the database query result contains an undefined
-        if (dbResponse.rows[0] === undefined){
-            bcrypt.genSalt(saltRounds, function(err, salt) {
-                bcrypt.hash(password, salt, function(err, hash) {
-                    const insertQuery = "INSERT INTO user_data (username, password_hash) VALUES ($1, $2);";
-                    const insertValues = [username, hash];
+    else if (verifyPassword === "" || password === ""){
+        res.render("registrationerror", {error: "Your passwords are empty."})
+    }
+    else {
+        const selectQuery = "SELECT * FROM user_data WHERE username=$1;";
+        const userValue = [username];
 
-                    dbClient.query(insertQuery, insertValues, function (dbError, dbResponse) {
-                        if (!dbError){
-                            console.log("Success!");
-                        }
-                        else{
-                            console.log(dbError);
-                        }
+        dbClient.query(selectQuery, userValue, function (dbError, dbResponse) {
+            // If the 0th element of the array with the database query result contains an undefined
+            if (dbResponse.rows[0] === undefined) {
+                // Encrypting password for storing in database
+                bcrypt.genSalt(saltRounds, function (err, salt) {
+                    bcrypt.hash(password, salt, function (err, hash) {
+                        const insertQuery = "INSERT INTO user_data (username, password_hash) VALUES ($1, $2);";
+                        const insertValues = [username, hash];
 
-                    })
+                        dbClient.query(insertQuery, insertValues, function (dbError, dbResponse) {
+                            if (!dbError) {
+                                console.log("Success!");
+                            } else {
+                                console.log(dbError);
+                            }
+                        })
+                    });
                 });
-            });
-        }
-
-        else{
-            res.render("registrationerror", {error: "It seems like the username " + username + " is already taken. Please try again with another name."})
-        }
-
-    });
+            } else {
+                res.render("registrationerror", {error: "It seems like the username " + username + " is already taken. Please try again with another name."})
+            }
+        });
+    }
 });
 
 // Test function for checking the simple functioning of the post button
@@ -86,7 +91,7 @@ app.post("/loginBtn", urlencodedParser, function (req, res) {
     let password = req.body.loginPassword;
 
     // Empty username and password aren't allowed TODO: Warning and input check
-    if (username != "" && password !=""){
+    if (username !== "" && password !==""){
         bcrypt.genSalt(saltRounds, function(err, salt) {
             bcrypt.hash(password, salt, function(err, hash) {
                 const selectQuery = "SELECT password_hash FROM user_data where username=$1;";
