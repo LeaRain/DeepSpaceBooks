@@ -74,7 +74,7 @@ app.post("/registrationBtn", urlencodedParser, function (req, res) {
         }
 
         else{
-            console.log("Username not available");
+            res.render("registrationerror", {error: "It seems like the username " + username + " is already taken. Please try again with another name."})
         }
 
     });
