@@ -5,7 +5,7 @@ placeholder, tbc
 ## Coding Notes 
 ### var vs. let
 In most cases, let is used instead of var for enabling function scope instead 
-of block scope as a default. With ESM5 (and ESM6), let prevents the unexpected
+of block scope as a default. With EcmaScript6 (and EcmaScript5), let prevents the unexpected
 and weird behavior of var. In some cases, also const is a possible option for
 variables which won't be reassigned. So for less confusing and more block
 scoping, my choice is the choice for let and const instead of var. I also 
