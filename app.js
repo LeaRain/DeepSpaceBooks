@@ -28,7 +28,9 @@ const app = express();
 
 app.use(session({
     secret: "This is a secret!",
-    resave:true,
+    // Cookie lasts 4.2 days, approximately
+    cookie: { maxAge: 360000000 },
+    resave: true,
     saveUninitialized: false
 }));
 
@@ -89,27 +91,30 @@ app.post("/registrationBtn", urlencodedParser, function (req, res) {
 app.post("/loginBtn", urlencodedParser, function (req, res) {
     let username = req.body.loginUsername;
     let password = req.body.loginPassword;
-    let resultBoolean = false;
 
-    // Empty username and password aren't allowed TODO: Warning and input check
+    // Empty username and password aren't allowed
     if (username !== "" || password !==""){
         const selectQuery = "SELECT password_hash FROM user_data where username=$1;";
         const userValue = [username];
 
         dbClient.query(selectQuery, userValue, function (dbError, dbResponse) {
-            // TODO: Error handling for no such username
-            let databaseHash = dbResponse.rows[0].password_hash;
-            // For checking if the password is right -> compare function because calculating the hash again will cause another hash result
-            bcrypt.compare(password, databaseHash, function(err, hashRes) {
-                if (hashRes){
-                    resultBoolean === true;
-                    res.render("home");
-                }
-                else{
-                    console.log("Login fail");
-                    res.render("index", {loginError: "You've entered the wrong password."});
-                }
-            });
+            // If there isn't a database output, this if will be proceed and render an error with no such username
+            if (dbResponse.rows == ""){
+                res.render("index", {loginError: "No such username found."});
+            }
+            else {
+                let databaseHash = dbResponse.rows[0].password_hash;
+                // For checking if the password is right -> compare function because calculating the hash again will cause another hash result
+                bcrypt.compare(password, databaseHash, function (err, hashRes) {
+                    if (hashRes) {
+                        console.log("Login success");
+                        res.redirect("home");
+                    } else {
+                        console.log("Login fail");
+                        res.render("index", {loginError: "You've entered the wrong password."});
+                    }
+                });
+            }
         });
     }
 
@@ -117,6 +122,10 @@ app.post("/loginBtn", urlencodedParser, function (req, res) {
         res.render("index", {loginError: "Please enter username and password."});
     }
 
+});
+
+app.get("/home", urlencodedParser, function (req, res){
+    res.render("home");
 });
 
 app.listen(PORT, function () {
