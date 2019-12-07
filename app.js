@@ -89,46 +89,40 @@ app.post("/registrationBtn", urlencodedParser, function (req, res) {
 app.post("/loginBtn", urlencodedParser, function (req, res) {
     let username = req.body.loginUsername;
     let password = req.body.loginPassword;
+    let resultBoolean = false;
 
     // Empty username and password aren't allowed TODO: Warning and input check
     if (username !== "" || password !==""){
-        let validPassword = checkPassword(username, password);
-        console.log("vaild password " + validPassword);
-        if (validPassword === true){
-            console.log("Login successful");
-        }
-        else{
-            console.log("Login failed");
-        }
+        const selectQuery = "SELECT password_hash FROM user_data where username=$1;";
+        const userValue = [username];
+
+
+        dbClient.query(selectQuery, userValue, function (dbError, dbResponse) {
+            let databaseHash = dbResponse.rows[0].password_hash;
+            // For checking if the password is right -> compare function because calculating the hash again will cause another hash result
+            bcrypt.compare(password, databaseHash, function(err, hashRes) {
+                if (hashRes){
+                    console.log("Successful login");
+                }
+                else{
+                    console.log("Login fail")
+                }
+            });
+        });
     }
 
     else{
-        res.render("loginerror", {error: "Please enter username and password."});
+        res.render("index", {loginError: "Please enter username and password."});
         // Prevents "Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client"
         return
     }
 
+    if (!resultBoolean){
+        res.render("index", {loginError: "You've entered the wrong password."});
+    }
+
     res.redirect("/");
 });
-
-function checkPassword(username, plainPassword){
-    const selectQuery = "SELECT password_hash FROM user_data where username=$1;";
-    const userValue = [username];
-    let resultBoolean = false;
-
-    // TODO: Clean this weird callback function mess
-
-    dbClient.query(selectQuery, userValue, function (dbError, dbResponse) {
-        let databaseHash = dbResponse.rows[0].password_hash;
-        // For checking if the password is right -> compare function because calculating the hash again will cause another hash result
-        bcrypt.compare(plainPassword, databaseHash, function(err, hashRes) {
-            console.log("PW HASH" +hashRes);
-            resultBoolean = hashRes === true;
-        });
-    });
-
-    return resultBoolean;
-}
 
 app.listen(PORT, function () {
     console.log("Deep Space Books listening on Port ${PORT}");
