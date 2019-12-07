@@ -8,7 +8,9 @@ html
         style
             include ./styles/bootstrap.css
 
-
+        block scripts
+            script(type="text/javascript")
+                include ./js/switchtab.js
 
     body
         div(class="container")
@@ -28,12 +30,33 @@ html
                                     span(class="sr-only") (current)
 
                             li(class="nav-item")
-                                a(class="nav-link" href="logout") Logout
+                                a(class="nav-link" href="") My profile (#{acceptedUsername})
 
                             li(class="nav-item")
-                                a(class="nav-link" href="") My profile (#{acceptedUsername})
+                                a(class="nav-link" href="logout") Logout
 
 
                         form(class="form-inline my-2 my-lg-0")
                             input(class="form-control mr-sm-2", type="text", placeholder="Search")
-                            button(class="btn btn-secondary my-2 my-sm-0", type="submit") Search
+                            button(class="btn btn-secondary my-2 my-sm-0", type="submit") Quick Search
+
+                div(class="row")
+                    div(class="col-lg-6")
+                        div(class="bs-component")
+                            ul(class="nav nav-tabs")
+                                h2 Search for books
+                                div(class="container")
+                                    ul(class="nav nav-tabs")
+                                        li(class="nav-item", id="keywordSearchID")
+                                            a(class="nav-link active", data-toggle="tab", href="#keywordSearch", id="keywordSearchIDA") Keyword Search
+
+                                        li(class="nav-item", id="detailSearchID")
+                                            a(class="nav-link", data-toggle="tab", href="#detailSearch", id="detailSearchIDA") Detail Search
+
+
+                                    div(id="myTabContent", class="tab-content", data-toggle="tab")
+                                        div(class="tab-pane fade active show", id="keywordSearch")
+                                            p key
+
+                                        div(class="tab-pane fade", id="detailSearch")
+                                            p detail
