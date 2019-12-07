@@ -96,16 +96,18 @@ app.post("/loginBtn", urlencodedParser, function (req, res) {
         const selectQuery = "SELECT password_hash FROM user_data where username=$1;";
         const userValue = [username];
 
-
         dbClient.query(selectQuery, userValue, function (dbError, dbResponse) {
+            // TODO: Error handling for no such username
             let databaseHash = dbResponse.rows[0].password_hash;
             // For checking if the password is right -> compare function because calculating the hash again will cause another hash result
             bcrypt.compare(password, databaseHash, function(err, hashRes) {
                 if (hashRes){
-                    console.log("Successful login");
+                    resultBoolean === true;
+                    res.render("home");
                 }
                 else{
-                    console.log("Login fail")
+                    console.log("Login fail");
+                    res.render("index", {loginError: "You've entered the wrong password."});
                 }
             });
         });
@@ -113,15 +115,8 @@ app.post("/loginBtn", urlencodedParser, function (req, res) {
 
     else{
         res.render("index", {loginError: "Please enter username and password."});
-        // Prevents "Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client"
-        return
     }
 
-    if (!resultBoolean){
-        res.render("index", {loginError: "You've entered the wrong password."});
-    }
-
-    res.redirect("/");
 });
 
 app.listen(PORT, function () {
