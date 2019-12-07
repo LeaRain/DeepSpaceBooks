@@ -173,7 +173,8 @@ app.post("/keywordSearchBtn", urlencodedParser, function (req, res) {
 
             dbClient.query(selectQuery, selectValues, function (dbError, dbResponse) {
                 if (!dbError){
-                    if (dbResponse.rows != []){
+                    console.log("dbResponse rows" + dbResponse.rows);
+                    if (dbResponse.rows != ""){
                         console.log(dbResponse.rows[0].title);
                         res.render("searchresult", {
                             bookTitles: dbResponse.rows,
@@ -182,7 +183,10 @@ app.post("/keywordSearchBtn", urlencodedParser, function (req, res) {
 
                     }
                     else{
-                        console.log("No results.")
+                        res.render("searchresult", {
+                            noResults: "There aren't any results. Please try again.",
+                            acceptedUsername: req.session.user.username
+                        })
                     }
                 }
                 else{
