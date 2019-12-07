@@ -130,13 +130,37 @@ app.post("/loginBtn", urlencodedParser, function (req, res) {
 
 app.get("/home", urlencodedParser, function (req, res){
     if (req.session.user != undefined) {
-        // TODO: username to pug
-        console.log(req.session.user.username);
         res.render("home", {acceptedUsername: req.session.user.username});
     }
     else{
         res.render("index", {sessionError: "You need to be logged in for this."})
     }
+});
+
+app.get("/logout", urlencodedParser, function (req, res) {
+    if (req.session.user != undefined) {
+        res.render("logout");
+    }
+    else{
+        res.render("index", {sessionError: "You need to be logged in for this."})
+    }
+});
+
+app.post("/logoutBtn", urlencodedParser, function (req, res) {
+    if (req.session.user != undefined) {
+        req.session.destroy(function (err) {
+            console.log("Sessions destroyed successfully.");
+        });
+        res.render("index", {successMessage: "Logout successful!"});
+    }
+    else{
+        res.render("index", {sessionError: "You need to be logged in for this."})
+    }
+
+});
+
+app.post("/stayInBtn", urlencodedParser, function (req, res) {
+    res.redirect("home");
 });
 
 function initSession(session) {
