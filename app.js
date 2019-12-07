@@ -50,11 +50,11 @@ app.post("/registrationBtn", urlencodedParser, function (req, res) {
     let verifyPassword = req.body.registrationVerifyPassword;
 
     if (verifyPassword !== password){
-        res.render("registrationerror", {error: "Your passwords are not the same."})
+        res.render("registration", {registrationError: "Your passwords are not the same."})
     }
 
     else if (verifyPassword === "" || password === ""){
-        res.render("registrationerror", {error: "Your passwords are empty."})
+        res.render("registration", {registrationError: "Your passwords are empty."})
     }
     else {
         const selectQuery = "SELECT * FROM user_data WHERE username=$1;";
@@ -71,15 +71,15 @@ app.post("/registrationBtn", urlencodedParser, function (req, res) {
 
                         dbClient.query(insertQuery, insertValues, function (dbError, dbResponse) {
                             if (!dbError) {
-                                console.log("Success!");
+                                res.render("index", {successMessage:"Registration successful! You can login now."});
                             } else {
-                                console.log(dbError);
+                                res.render("registration", {registrationError: "Oooppps! Something went wrong. Please try again."});
                             }
                         })
                     });
                 });
             } else {
-                res.render("registrationerror", {error: "It seems like the username " + username + " is already taken. Please try again with another name."})
+                res.render("registration", {registrationError: "It seems like the username " + username + " is already taken. Please try again with another name."})
             }
         });
     }

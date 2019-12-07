@@ -47,7 +47,11 @@ html
 
           div(class="col-lg-6")
             div(class="bs-component")
-              h2 Already an account?
+              // Showing a success message instead of a login alert -> login is here
+              if successMessage
+                div(class="alert alert-dismissible alert-success") #{successMessage}
+              else
+                h2 Already an account?
               p(class="lead") Login here!
 
               form(method="post", action="loginBtn")
