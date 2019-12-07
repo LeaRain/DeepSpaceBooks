@@ -163,6 +163,47 @@ app.post("/stayInBtn", urlencodedParser, function (req, res) {
     res.redirect("home");
 });
 
+app.post("/keywordSearchBtn", urlencodedParser, function (req, res) {
+    if (req.session.user != undefined) {
+        let keyword = req.body.keywordInput;
+        if (keyword != "") {
+            const selectQuery = "SELECT title from book_information where (title like $1 or author like $1 or coauthor like $1 or isbn like $1);";
+            // Not only a perfect 1:1 match is a result, books alike are also in the resulting output
+            const selectValues = ["%" + keyword + "%"];
+
+            dbClient.query(selectQuery, selectValues, function (dbError, dbResponse) {
+                if (!dbError){
+                    if (dbResponse.rows != []){
+                        console.log(dbResponse.rows[0].title);
+                        res.render("searchresult", {
+                            bookTitles: dbResponse.rows,
+                            acceptedUsername: req.session.user.username
+                        })
+
+                    }
+                    else{
+                        console.log("No results.")
+                    }
+                }
+                else{
+                    res.render("home", {
+                        searchError: "Something went wrong with the database connection. Please try again later.",
+                        acceptedUsername: req.session.user.username
+                    })
+                }
+            });
+        } else {
+            res.render("home", {
+                searchError: "Please enter something to search.",
+                acceptedUsername: req.session.user.username
+            })
+        }
+    }
+    else{
+        res.render("index", {sessionError: "You need to be logged in for this."});
+    }
+});
+
 function initSession(session) {
     if (session.notes == undefined) {
         session.notes = [];

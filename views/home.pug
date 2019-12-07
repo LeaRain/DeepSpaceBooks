@@ -36,12 +36,15 @@ html
                                 a(class="nav-link" href="logout") Logout
 
 
-                        form(class="form-inline my-2 my-lg-0")
-                            input(class="form-control mr-sm-2", type="text", placeholder="Search")
+                        form(method="post", action="keywordSearchBtn", class="form-inline my-2 my-lg-0")
+                            input(class="form-control mr-sm-2", type="text", placeholder="Search", name="keywordInput")
                             button(class="btn btn-secondary my-2 my-sm-0", type="submit") Quick Search
 
                 div(class="row")
                     div(class="col-lg-6")
+                        if searchError
+                            div(class="alert alert-danger" role="alert") #{searchError}
+
                         div(class="bs-component")
                             ul(class="nav nav-tabs")
                                 h2 Search for books
