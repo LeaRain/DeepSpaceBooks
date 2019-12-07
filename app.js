@@ -94,7 +94,8 @@ app.post("/loginBtn", urlencodedParser, function (req, res) {
 
     // Empty username and password aren't allowed
     if (username !== "" || password !==""){
-        const selectQuery = "SELECT password_hash FROM user_data where username=$1;";
+        // Getting username and password_hash so the username can be used for a session variable
+        const selectQuery = "SELECT username, password_hash FROM user_data where username=$1;";
         const userValue = [username];
 
         dbClient.query(selectQuery, userValue, function (dbError, dbResponse) {
@@ -108,6 +109,9 @@ app.post("/loginBtn", urlencodedParser, function (req, res) {
                 bcrypt.compare(password, databaseHash, function (err, hashRes) {
                     if (hashRes) {
                         console.log("Login success");
+                        req.session.user = {
+                            username: dbResponse.rows[0].username
+                        };
                         res.redirect("home");
                     } else {
                         console.log("Login fail");
@@ -125,8 +129,21 @@ app.post("/loginBtn", urlencodedParser, function (req, res) {
 });
 
 app.get("/home", urlencodedParser, function (req, res){
-    res.render("home");
+    if (req.session.user != undefined) {
+        // TODO: username to pug
+        console.log(req.session.user.username);
+        res.render("home", {acceptedUsername: req.session.user.username});
+    }
+    else{
+        res.render("index", {sessionError: "You need to be logged in for this."})
+    }
 });
+
+function initSession(session) {
+    if (session.notes == undefined) {
+        session.notes = [];
+    }
+}
 
 app.listen(PORT, function () {
     console.log("Deep Space Books listening on Port ${PORT}");
