@@ -259,6 +259,7 @@ app.get("/books", urlencodedParser, function (req, res) {
     if (req.session.user != undefined) {
         const selectQuery = "SELECT book_id, title, author, coauthor from book_information";
 
+        // Here isn't a checkup for failing connection, empty dbResponse or something like that because that would indicate a big problem with the database (connection) -> fails at enough other points
         dbClient.query(selectQuery, function (dbError, dbResponse){
             res.render("books", {
                 bookList: dbResponse.rows,
@@ -302,6 +303,25 @@ app.get("/books/:book_id", function (req, res) {
         })
     }
 
+
+    else{
+        res.render("index", {sessionError: "You need to be logged in for this."});
+    }
+
+});
+
+app.get("/authors", urlencodedParser, function (req, res) {
+    if (req.session.user != undefined) {
+        const selectQuery = "SELECT author_name, author_id from author_information;";
+
+        dbClient.query(selectQuery, function (dbError, dbResponse) {
+            console.log(dbResponse.rows);
+            res.render("authors", {
+                authorList: dbResponse.rows,
+                acceptedUsername: req.session.user.username
+            })
+        })
+    }
 
     else{
         res.render("index", {sessionError: "You need to be logged in for this."});
