@@ -8,6 +8,10 @@ html
         style
             include ./styles/bootstrap.css
 
+        block scripts
+            script(type="text/javascript")
+                include ./js/switchtab.js
+
     body
         div(class="container")
             block content
@@ -36,19 +40,69 @@ html
                             input(class="form-control mr-sm-2", type="text", placeholder="Search", name="keywordInput")
                             button(class="btn btn-secondary my-2 my-sm-0", type="submit") Quick Search
 
-                div(class="row")
-                    div(class="col-lg-6")
-                        div(class="bs-component")
-                            // TODO: Different structure so alert is not only in one rows (poke tabs and spaces)
-                            if noResults
-                                div(class="alert alert-dismissible alert-warning")
-                                    p(class="lead") #{noResults}
+                div(class="container")
+                    p(class="lead") Your results
+                    if noResults
+                        div(class="alert alert-danger" role="alert") #{noResults}
 
-                            else
+                    div(class="row")
+                        div(class="col-lg-6")
+                            div(class="bs-component")
                                 ul(class="list-group")
-                                    each bookTitle in bookTitles
-                                        li(class="list-group-item d-flex justify-content-between align-items-center") #{bookTitle.title}
-                                            button(type="button", class="btn btn-info") Details
+                                    if !noResults
+                                        each bookTitle in bookTitles
+                                            li(class="list-group-item d-flex justify-content-between align-items-center") #{bookTitle.title}
+                                                button(type="button", class="btn btn-info") Details
+                        div(class="col-lg-6")
+                            div(class="bs-component")
+                                p(class="lead") Not the results you are looking for? Try again!
+
+                                iv(class="bs-component")
+                                    ul(class="nav nav-tabs")
+                                        h2 Search for books
+                                        div(class="container")
+                                            ul(class="nav nav-tabs")
+                                                li(class="nav-item", id="keywordSearchID")
+                                                    a(class="nav-link active", data-toggle="tab", href="#keywordSearch", id="keywordSearchIDA") Keyword Search
+
+                                                li(class="nav-item", id="detailSearchID")
+                                                    a(class="nav-link", data-toggle="tab", href="#detailSearch", id="detailSearchIDA") Detail Search
 
 
-                            // TODO: Build "try again search" interface/redirect
+                                            div(id="searchTab", class="tab-content", data-toggle="tab")
+                                                div(class="tab-pane fade active show", id="keywordSearch")
+                                                    form(method="post", action="keywordSearchBtn")
+                                                        div(class="form-group")
+                                                            label Keyword
+                                                            input(type="text", class="form-control", id="keywordInput", name="keywordInput", aria-describedby="usernameHelp", placeholder="Enter keyword")
+                                                            small(id="keywordHelp", class="form-text text-muted") Please enter a keyword for a book you are looking for
+
+                                                        div(class="form-group")
+                                                            button(type="submit", class="btn btn-info btn-lg btn-block") Search!
+
+                                                div(class="tab-pane fade", id="detailSearch")
+                                                    form(method="post", action="keywordSearchBtn")
+                                                        div(class="form-group")
+                                                            label Title
+                                                            input(type="text", class="form-control", id="detailTitle", name="detailTitle", aria-describedby="titleHelp", placeholder="Enter title")
+                                                            small(id="titleHelp", class="form-text text-muted") Please enter the title of a book
+
+                                                            div(class="form-group")
+                                                                label ISBN
+                                                                input(type="text", class="form-control", id="detailISBN", name="detailISBN", aria-describedby="ISBNHelp", placeholder="Enter ISBN")
+                                                                small(id="ISBNHelp", class="form-text text-muted") Please enter the ISBN of a book
+
+                                                            div(class="form-group")
+                                                                label Author
+                                                                input(type="text", class="form-control", id="detailAuthor", name="detailAuthor", aria-describedby="authorHelp", placeholder="Enter author")
+                                                                small(id="authorHelp", class="form-text text-muted") Please enter the author of a book
+
+                                                            div(class="form-group")
+                                                                label Co Author
+                                                                input(type="text", class="form-control", id="detailCoAuthor", name="detailCoAuthor", aria-describedby="coAuthorHelp", placeholder="Enter co author")
+                                                                small(id="coAuthorHelp", class="form-text text-muted") Please enter the author of a book
+
+                                                        div(class="form-group")
+                                                            button(type="submit", class="btn btn-primary btn-lg btn-block") Search!
+
+
