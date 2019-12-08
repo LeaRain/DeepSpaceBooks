@@ -310,6 +310,21 @@ app.get("/books/:book_id", function (req, res) {
 
 });
 
+app.get("/authors/:author_id", function (req, res) {
+    if (req.session.user != undefined) {
+        // Getting information about an author and books with a join statement
+        const selectQuery = "SELECT book_id, title, author_name FROM book_information JOIN author_information ON book_information.author = author_information.author_name WHERE author_information.author_id=$1;"
+        const selectValue = [req.params.author_id];
+
+        // TODO: Query, checks, authorinformation.pug (create and render)
+    }
+
+    else{
+        res.render("index", {sessionError: "You need to be logged in for this."});
+    }
+});
+
+
 app.get("/authors", urlencodedParser, function (req, res) {
     if (req.session.user != undefined) {
         const selectQuery = "SELECT author_name, author_id from author_information;";
