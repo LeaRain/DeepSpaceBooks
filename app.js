@@ -260,15 +260,11 @@ app.get("/books", urlencodedParser, function (req, res) {
         const selectQuery = "SELECT book_id, title, author, coauthor from book_information";
 
         dbClient.query(selectQuery, function (dbError, dbResponse){
-            console.log(dbResponse.rows);
             res.render("books", {
                 bookList: dbResponse.rows,
                 acceptedUsername: req.session.user.username
             })
-
         })
-
-        // TODO: Finally res.render("books");
     }
     else{
         res.render("index", {sessionError: "You need to be logged in for this."});
@@ -283,17 +279,23 @@ app.get("/books/:book_id", function (req, res) {
 
         dbClient.query(selectQuery, selectValue, function (dbError, dbResponse) {
             if (!dbError){
+                console.log(dbResponse.rows);
                 if (dbResponse.rows != ""){
-                    console.log(dbResponse.rows);
+                    console.log("9000");
                     res.render("bookinformation", {
                         // Information comes in a list, so the first element of this list is required
                         bookResult: dbResponse.rows[0],
                         acceptedUsername: req.session.user.username
                     })
                 }
+                else{
+                    res.render("home", {
+                        searchError: "No such book found. Please try something else..",
+                        acceptedUsername: req.session.user.username
+                    })
+                }
             }
             else{
-                // TODO: Change home to universal book list at /books
                 res.render("home", {
                     searchError: "Something went wrong with the database connection. Please try again later.",
                     acceptedUsername: req.session.user.username
