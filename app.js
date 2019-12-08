@@ -167,15 +167,13 @@ app.post("/keywordSearchBtn", urlencodedParser, function (req, res) {
     if (req.session.user != undefined) {
         let keyword = req.body.keywordInput;
         if (keyword != "") {
-            const selectQuery = "SELECT title from book_information where (title like $1 or author like $1 or coauthor like $1 or isbn like $1);";
+            const selectQuery = "SELECT title, author, coauthor from book_information where (title like $1 or author like $1 or coauthor like $1 or isbn like $1);";
             // Not only a perfect 1:1 match is a result, books alike are also in the resulting output
             const selectValues = ["%" + keyword + "%"];
 
             dbClient.query(selectQuery, selectValues, function (dbError, dbResponse) {
                 if (!dbError){
-                    console.log("dbResponse rows" + dbResponse.rows);
                     if (dbResponse.rows != ""){
-                        console.log(dbResponse.rows[0].title);
                         res.render("searchresult", {
                             bookTitles: dbResponse.rows,
                             acceptedUsername: req.session.user.username
@@ -202,6 +200,19 @@ app.post("/keywordSearchBtn", urlencodedParser, function (req, res) {
                 acceptedUsername: req.session.user.username
             })
         }
+    }
+    else{
+        res.render("index", {sessionError: "You need to be logged in for this."});
+    }
+});
+
+app.post("/detailSearchBtn", urlencodedParser, function (req, res) {
+    if (req.session.user != undefined) {
+        let bookTitle = req.body.detailTitle;
+        let bookISBN = req.body.detailISBN;
+        let bookAuthor = req.body.detailAuthor;
+        let bookCoAuthor = req.body.detailCoAuthor;
+
     }
     else{
         res.render("index", {sessionError: "You need to be logged in for this."});

@@ -51,8 +51,15 @@ html
                                 ul(class="list-group")
                                     if !noResults
                                         each bookTitle in bookTitles
-                                            li(class="list-group-item d-flex justify-content-between align-items-center") #{bookTitle.title}
-                                                button(type="button", class="btn btn-info") Details
+                                            if bookTitle.coauthor
+                                                li(class="list-group-item d-flex justify-content-between align-items-center") Book with title, author and coauthor
+                                                button(type="button", class="btn btn-primary") #{bookTitle.title} written by #{bookTitle.author} and #{bookTitle.coauthor}
+                                            else
+                                                // Different color for books with co authors -> optical feedback about something different
+                                                li(class="list-group-item d-flex justify-content-between align-items-center") Book with title and author
+                                                button(type="button", class="btn btn-info") #{bookTitle.title} written by #{bookTitle.author}
+
+
                         div(class="col-lg-6")
                             div(class="bs-component")
                                 p(class="lead") Not the results you are looking for? Try again!
@@ -81,7 +88,7 @@ html
                                                             button(type="submit", class="btn btn-info btn-lg btn-block") Search!
 
                                                 div(class="tab-pane fade", id="detailSearch")
-                                                    form(method="post", action="keywordSearchBtn")
+                                                    form(method="post", action="detailSearchBtn")
                                                         div(class="form-group")
                                                             label Title
                                                             input(type="text", class="form-control", id="detailTitle", name="detailTitle", aria-describedby="titleHelp", placeholder="Enter title")
