@@ -255,7 +255,25 @@ app.post("/detailSearchBtn", urlencodedParser, function (req, res) {
     }
 });
 
-// TODO: app.get for books
+app.get("/books", urlencodedParser, function (req, res) {
+    if (req.session.user != undefined) {
+        const selectQuery = "SELECT book_id, title, author, coauthor from book_information";
+
+        dbClient.query(selectQuery, function (dbError, dbResponse){
+            console.log(dbResponse.rows);
+            res.render("books", {
+                bookList: dbResponse.rows,
+                acceptedUsername: req.session.user.username
+            })
+
+        })
+
+        // TODO: Finally res.render("books");
+    }
+    else{
+        res.render("index", {sessionError: "You need to be logged in for this."});
+    }
+});
 
 app.get("/books/:book_id", function (req, res) {
     if (req.session.user != undefined) {
@@ -266,6 +284,7 @@ app.get("/books/:book_id", function (req, res) {
         dbClient.query(selectQuery, selectValue, function (dbError, dbResponse) {
             if (!dbError){
                 if (dbResponse.rows != ""){
+                    console.log(dbResponse.rows);
                     res.render("bookinformation", {
                         // Information comes in a list, so the first element of this list is required
                         bookResult: dbResponse.rows[0],
