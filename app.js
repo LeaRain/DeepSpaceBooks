@@ -279,9 +279,7 @@ app.get("/books/:book_id", function (req, res) {
 
         dbClient.query(selectQuery, selectValue, function (dbError, dbResponse) {
             if (!dbError){
-                console.log(dbResponse.rows);
                 if (dbResponse.rows != ""){
-                    console.log("9000");
                     res.render("bookinformation", {
                         // Information comes in a list, so the first element of this list is required
                         bookResult: dbResponse.rows[0],
