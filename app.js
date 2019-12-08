@@ -167,7 +167,7 @@ app.post("/keywordSearchBtn", urlencodedParser, function (req, res) {
     if (req.session.user != undefined) {
         let keyword = req.body.keywordInput;
         if (keyword != "") {
-            const selectQuery = "SELECT title, author, coauthor from book_information where (title like $1 or author like $1 or coauthor like $1 or isbn like $1);";
+            const selectQuery = "SELECT book_id, title, author, coauthor from book_information where (title like $1 or author like $1 or coauthor like $1 or isbn like $1);";
             // Not only a perfect 1:1 match is a result, books alike are also in the resulting output
             const selectValues = ["%" + keyword + "%"];
 
@@ -221,7 +221,7 @@ app.post("/detailSearchBtn", urlencodedParser, function (req, res) {
         }
 
         else {
-            const selectQuery = "SELECT title, author, coauthor from book_information where (title like $1 or (author like $2 or coauthor like $2) or isbn like $3);";
+            const selectQuery = "SELECT book_id, title, author, coauthor from book_information where (title like $1 or (author like $2 or coauthor like $2) or isbn like $3);";
             const selectValues = ["%" + bookTitle + "%", "%" + bookAuthor + "%", "%" + bookISBN + "%"];
 
             dbClient.query(selectQuery, selectValues, function (dbError, dbResponse) {
@@ -254,6 +254,43 @@ app.post("/detailSearchBtn", urlencodedParser, function (req, res) {
         res.render("index", {sessionError: "You need to be logged in for this."});
     }
 });
+
+// TODO: app.get for books
+
+app.get("/books/:book_id", function (req, res) {
+    if (req.session.user != undefined) {
+        const selectQuery = "SELECT title, author, coauthor, isbn, publish_year FROM book_information where book_id=$1";
+        // The book_id is required -> getting out of request parameters
+        const selectValue = [req.params.book_id];
+
+        dbClient.query(selectQuery, selectValue, function (dbError, dbResponse) {
+            if (!dbError){
+                if (dbResponse.rows != ""){
+                    res.render("bookinformation", {
+                        // Information comes in a list, so the first element of this list is required
+                        bookResult: dbResponse.rows[0],
+                        acceptedUsername: req.session.user.username
+                    })
+                }
+            }
+            else{
+                // TODO: Change home to universal book list at /books
+                res.render("home", {
+                    searchError: "Something went wrong with the database connection. Please try again later.",
+                    acceptedUsername: req.session.user.username
+                })
+            }
+        })
+    }
+
+
+    else{
+        res.render("index", {sessionError: "You need to be logged in for this."});
+    }
+
+});
+
+
 
 function initSession(session) {
     if (session.notes == undefined) {

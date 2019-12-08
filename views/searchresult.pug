@@ -52,12 +52,14 @@ html
                                     if !noResults
                                         each bookTitle in bookTitles
                                             if bookTitle.coauthor
-                                                li(class="list-group-item d-flex justify-content-between align-items-center") Book with title, author and coauthor
-                                                button(type="button", class="btn btn-primary") #{bookTitle.title} written by #{bookTitle.author} and #{bookTitle.coauthor}
+                                                form(method="get", action="/books/"+bookTitle.book_id)
+                                                    li(class="list-group-item d-flex justify-content-between align-items-center")
+                                                        button(type="submit", class="btn btn-primary") #{bookTitle.title} written by #{bookTitle.author} and #{bookTitle.coauthor}
                                             else
-                                                // Different color for books with co authors -> optical feedback about something different
-                                                li(class="list-group-item d-flex justify-content-between align-items-center") Book with title and author
-                                                button(type="button", class="btn btn-info") #{bookTitle.title} written by #{bookTitle.author}
+                                                form(method="get", action="/books/"+bookTitle.book_id)
+                                                    // Different color for books with co authors -> optical feedback about something different
+                                                    li(class="list-group-item d-flex justify-content-between align-items-center")
+                                                        button(type="submit", class="btn btn-info") #{bookTitle.title} written by #{bookTitle.author}
 
 
                         div(class="col-lg-6")
