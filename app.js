@@ -211,8 +211,44 @@ app.post("/detailSearchBtn", urlencodedParser, function (req, res) {
         let bookTitle = req.body.detailTitle;
         let bookISBN = req.body.detailISBN;
         let bookAuthor = req.body.detailAuthor;
-        let bookCoAuthor = req.body.detailCoAuthor;
 
+        if (bookTitle == "" || bookISBN == "" || bookAuthor == ""){
+            res.render("home", {
+                // If the % trick is used and the strings are empty, the database will check for %% which means literally all possibilities
+                searchError: "Please enter something to search in every detail search field. If you have not all the information, try keyword search.",
+                acceptedUsername: req.session.user.username
+            });
+        }
+
+        else {
+            const selectQuery = "SELECT title, author, coauthor from book_information where (title like $1 or (author like $2 or coauthor like $2) or isbn like $3);";
+            const selectValues = ["%" + bookTitle + "%", "%" + bookAuthor + "%", "%" + bookISBN + "%"];
+
+            dbClient.query(selectQuery, selectValues, function (dbError, dbResponse) {
+                if (!dbError){
+                    if (dbResponse.rows != ""){
+                        res.render("searchresult", {
+                            bookTitles: dbResponse.rows,
+                            acceptedUsername: req.session.user.username
+                        })
+
+                    }
+                    else{
+                        res.render("searchresult", {
+                            noResults: "There aren't any results. Please try again.",
+                            acceptedUsername: req.session.user.username
+                        })
+                    }
+                }
+
+                else{
+                    res.render("home", {
+                        searchError: "Something went wrong with the database connection. Please try again later.",
+                        acceptedUsername: req.session.user.username
+                    })
+                }
+            })
+        }
     }
     else{
         res.render("index", {sessionError: "You need to be logged in for this."});
