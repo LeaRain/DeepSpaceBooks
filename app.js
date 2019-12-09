@@ -322,7 +322,7 @@ app.get("/books", urlencodedParser, function (req, res) {
 
 app.get("/books/:book_id", function (req, res) {
     if (req.session.user != undefined) {
-        const selectQuery = "SELECT title, author, coauthor, isbn, publish_year FROM book_information where book_id=$1";
+        const selectQuery = "SELECT book_id, title, author, author_id, coauthor, isbn, publish_year  FROM book_information JOIN author_information ON book_information.author = author_information.author_name WHERE book_information.book_id=$1;";
         // The book_id is required -> getting out of request parameters
         const selectValue = [req.params.book_id];
 
@@ -343,6 +343,7 @@ app.get("/books/:book_id", function (req, res) {
                 }
             }
             else{
+                console.log(dbError);
                 res.render("home", {
                     searchError: "Something went wrong with the database connection. Please try again later.",
                     acceptedUsername: req.session.user.username

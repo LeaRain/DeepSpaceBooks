@@ -53,7 +53,9 @@ html
 
                                     tr(class="table-primary")
                                         th(scope="col") Book author
-                                        td #{bookResult.author}
+                                        td
+                                            // TODO: Get another color for author link
+                                            a(class="text-danger", href="/authors/"+bookResult.author_id) #{bookResult.author}
 
                                     tr(class="table-info")
                                         th(scope="col") Book co author
