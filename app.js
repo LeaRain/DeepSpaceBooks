@@ -174,14 +174,14 @@ app.post("/keywordSearchBtn", urlencodedParser, function (req, res) {
             dbClient.query(selectQuery, selectValues, function (dbError, dbResponse) {
                 if (!dbError){
                     if (dbResponse.rows != ""){
-                        res.render("searchresult", {
+                        res.render("booksearchresult", {
                             bookTitles: dbResponse.rows,
                             acceptedUsername: req.session.user.username
                         })
 
                     }
                     else{
-                        res.render("searchresult", {
+                        res.render("booksearchresult", {
                             noResults: "There aren't any results. Please try again.",
                             acceptedUsername: req.session.user.username
                         })
@@ -227,14 +227,14 @@ app.post("/detailSearchBtn", urlencodedParser, function (req, res) {
             dbClient.query(selectQuery, selectValues, function (dbError, dbResponse) {
                 if (!dbError){
                     if (dbResponse.rows != ""){
-                        res.render("searchresult", {
+                        res.render("booksearchresult", {
                             bookTitles: dbResponse.rows,
                             acceptedUsername: req.session.user.username
                         })
 
                     }
                     else{
-                        res.render("searchresult", {
+                        res.render("booksearchresult", {
                             noResults: "There aren't any results. Please try again.",
                             acceptedUsername: req.session.user.username
                         })
@@ -249,6 +249,54 @@ app.post("/detailSearchBtn", urlencodedParser, function (req, res) {
                 }
             })
         }
+    }
+    else{
+        res.render("index", {sessionError: "You need to be logged in for this."});
+    }
+});
+
+app.post("/authorSearchBtn", urlencodedParser, function (req, res) {
+    if (req.session.user != undefined) {
+        let authorName = req.body.authorInput;
+
+        if (authorName != "") {
+            const selectQuery = "SELECT author_id, author_name from author_information where author_name like $1";
+            const selectValue = ["%" + authorName + "%"];
+
+            dbClient.query(selectQuery, selectValue, function (dbError, dbResponse) {
+                if (!dbError){
+                    if (dbResponse.rows != ""){
+                        res.render("authorsearchresult", {
+                            authorList: dbResponse.rows,
+                            acceptedUsername: req.session.user.username
+                        })
+
+                    }
+                    else{
+                        res.render("authorsearchresult", {
+                            noResults: "There aren't any results. Please try again.",
+                            acceptedUsername: req.session.user.username
+                        })
+                    }
+
+                }
+
+                else{
+                    res.render("home", {
+                        searchError: "Something went wrong with the database connection. Please try again later.",
+                        acceptedUsername: req.session.user.username
+                    })
+                }
+            })
+        }
+
+        else{
+            res.render("home", {
+                searchError: "Please enter something to search in the author search field. If you are looking for books, not authors, try the book search.",
+                acceptedUsername: req.session.user.username
+            });
+        }
+
     }
     else{
         res.render("index", {sessionError: "You need to be logged in for this."});
@@ -316,7 +364,6 @@ app.get("/authors", urlencodedParser, function (req, res) {
         const selectQuery = "SELECT author_name, author_id from author_information;";
 
         dbClient.query(selectQuery, function (dbError, dbResponse) {
-            console.log(dbResponse.rows);
             res.render("authors", {
                 authorList: dbResponse.rows,
                 acceptedUsername: req.session.user.username
@@ -334,7 +381,7 @@ app.get("/authors", urlencodedParser, function (req, res) {
 app.get("/authors/:author_id", function (req, res) {
     if (req.session.user != undefined) {
         // Getting information about an author and books with a join statement
-        const selectQuery = "SELECT book_id, title, author_name FROM book_information JOIN author_information ON book_information.author = author_information.author_name WHERE author_information.author_id=$1;"
+        const selectQuery = "SELECT book_id, title, author_name FROM book_information JOIN author_information ON book_information.author = author_information.author_name WHERE author_information.author_id=$1;";
         const selectValue = [req.params.author_id];
 
         dbClient.query(selectQuery, selectValue, function (dbError, dbResponse) {
@@ -360,8 +407,6 @@ app.get("/authors/:author_id", function (req, res) {
                 })
             }
         })
-
-        // TODO: Query, checks, authorinformation.pug (create and render)
     }
 
     else{

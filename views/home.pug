@@ -53,8 +53,8 @@ html
 
                         div(class="bs-component")
                             ul(class="nav nav-tabs")
-                                h2 Search for books
                                 div(class="container")
+                                    h2 Search for books
                                     ul(class="nav nav-tabs")
                                         li(class="nav-item", id="keywordSearchID")
                                             a(class="nav-link active", data-toggle="tab", href="#keywordSearch", id="keywordSearchIDA") Keyword Search
@@ -91,5 +91,23 @@ html
                                                         input(type="text", class="form-control", id="detailAuthor", name="detailAuthor", aria-describedby="authorHelp", placeholder="Enter author")
                                                         small(id="authorHelp", class="form-text text-muted") Please enter the author of a book
 
+
+                        div(class="bs-component")
+                            ul(class="nav nav-tabs")
+                                div(class="container")
+                                    h2 Search for main authors
+                                    ul(class="nav nav-tabs")
+                                        li(class="nav-item", id="authorSearchId")
+                                            a(class="nav-link active", data-toggle="tab", href="#authorSearch", id="authorSearchIDA") Author Search
+
+                                    div(id="authorSearchTab", class="tab-content", data-toggle="tab")
+                                        div(class="tab-pane fade active show", id="authorSearch")
+                                            form(method="post", action="authorSearchBtn")
+                                                div(class="form-group")
+                                                    label Author name
+                                                    input(type="text", class="form-control", id="authorInput", name="authorInput", aria-describedby="authorHelp", placeholder="Enter author name")
+                                                    small(id="authorSearchHelp", class="form-text text-muted") Please enter the name of a main author you are looking for
+
                                                 div(class="form-group")
                                                     button(type="submit", class="btn btn-info btn-lg btn-block") Search!
+
