@@ -51,3 +51,22 @@ html
                                         li(class="list-group-item d-flex justify-content-between align-items-center")
                                                 button(type="submit", class="btn btn-primary") #{author.author_name}
 
+                    div(class="col-lg-6")
+                        div(class="bs-component")
+                            h2 Cool, but now get me more specific results!
+                            ul(class="nav nav-tabs")
+                                li(class="nav-item", id="authorSearchId")
+                                    a(class="nav-link active", data-toggle="tab", href="#authorSearch", id="authorSearchIDA") Author Search
+
+                            div(id="authorSearchTab", class="tab-content", data-toggle="tab")
+                                div(class="tab-pane fade active show", id="authorSearch")
+                                    form(method="post", action="authorSearchBtn")
+                                        div(class="form-group")
+                                            label Author name
+                                            input(type="text", class="form-control", id="authorInput", name="authorInput", aria-describedby="authorHelp", placeholder="Enter author name")
+                                            small(id="authorSearchHelp", class="form-text text-muted") Please enter the name of a main author you are looking for
+
+                                        div(class="form-group")
+                                            button(type="submit", class="btn btn-info btn-lg btn-block") Search!
+
+                            
