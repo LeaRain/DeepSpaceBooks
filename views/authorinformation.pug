@@ -12,7 +12,7 @@ html
         div(class="container")
             block content
                 h1 Deep Space Books
-                p(class="lead") Welcome #{acceptedUsername}
+                p(class="lead") Information about this book
 
                 nav(class="navbar navbar-expand-lg navbar-dark bg-primary")
                     a(class="navbar-brand" href="#")
@@ -22,28 +22,27 @@ html
                     div(class="collapse navbar-collapse" id="navbarColor01")
                         ul(class="navbar-nav mr-auto")
                             li(class="nav-item active")
-                                a(class="nav-link" href="./home") Home
+                                a(class="nav-link" href="../home") Home
                                     span(class="sr-only") (current)
 
                             li(class="nav-item")
                                 a(class="nav-link" href="") My profile (#{acceptedUsername})
 
                             li(class="nav-item")
-                                a(class="nav-link" href="./books") All books
+                                a(class="nav-link" href="../books") All books
 
                             li(class="nav-item")
-                                a(class="nav-link" href="authors") All authors
+                                a(class="nav-link" href="../authors") All authors
 
                             li(class="nav-item")
-                                a(class="nav-link" href="./logout") Logout
+                                a(class="nav-link" href="../logout") Logout
 
                 div(class="row")
                     div(class="col-lg-6")
                         div(class="bs-component")
-                            h2 All our main authors
+                            h2 Information about #{firstResult.author_name}, written books
                             ul(class="list-group")
-                                each author in authorList
-                                    form(method="get", action="/authors/" + author.author_id)
+                                each result in authorResult
+                                    form(method="get", action="../books/" + result.book_id)
                                         li(class="list-group-item d-flex justify-content-between align-items-center")
-                                                button(type="submit", class="btn btn-primary") #{author.author_name}
-
+                                            button(type="submit", class="btn btn-primary") #{result.title}

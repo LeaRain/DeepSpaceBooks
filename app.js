@@ -289,7 +289,7 @@ app.get("/books/:book_id", function (req, res) {
                 }
                 else{
                     res.render("home", {
-                        searchError: "No such book found. Please try something else..",
+                        searchError: "No such book found. Please try something else.",
                         acceptedUsername: req.session.user.username
                     })
                 }
@@ -308,20 +308,6 @@ app.get("/books/:book_id", function (req, res) {
         res.render("index", {sessionError: "You need to be logged in for this."});
     }
 
-});
-
-app.get("/authors/:author_id", function (req, res) {
-    if (req.session.user != undefined) {
-        // Getting information about an author and books with a join statement
-        const selectQuery = "SELECT book_id, title, author_name FROM book_information JOIN author_information ON book_information.author = author_information.author_name WHERE author_information.author_id=$1;"
-        const selectValue = [req.params.author_id];
-
-        // TODO: Query, checks, authorinformation.pug (create and render)
-    }
-
-    else{
-        res.render("index", {sessionError: "You need to be logged in for this."});
-    }
 });
 
 
@@ -344,6 +330,44 @@ app.get("/authors", urlencodedParser, function (req, res) {
 
 });
 
+
+app.get("/authors/:author_id", function (req, res) {
+    if (req.session.user != undefined) {
+        // Getting information about an author and books with a join statement
+        const selectQuery = "SELECT book_id, title, author_name FROM book_information JOIN author_information ON book_information.author = author_information.author_name WHERE author_information.author_id=$1;"
+        const selectValue = [req.params.author_id];
+
+        dbClient.query(selectQuery, selectValue, function (dbError, dbResponse) {
+            if(!dbError){
+                if (dbResponse.rows != ""){
+                    res.render("authorinformation", {
+                        firstResult: dbResponse.rows[0],
+                        authorResult: dbResponse.rows,
+                        acceptedUsername: req.session.user.username
+                    })
+                }
+                else{
+                    res.render("home", {
+                        searchError: "No such author found. Please try something else.",
+                        acceptedUsername: req.session.user.username
+                    })
+                }
+            }
+            else{
+                res.render("home", {
+                    searchError: "Something went wrong with the database connection. Please try again later.",
+                    acceptedUsername: req.session.user.username
+                })
+            }
+        })
+
+        // TODO: Query, checks, authorinformation.pug (create and render)
+    }
+
+    else{
+        res.render("index", {sessionError: "You need to be logged in for this."});
+    }
+});
 
 
 function initSession(session) {
