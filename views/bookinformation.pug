@@ -54,7 +54,6 @@ html
                                     tr(class="table-secondary")
                                         th(scope="col") Book author
                                         td
-                                            // TODO: Get another color for author link
                                             a(class="text-dark", href="/authors/"+bookResult.author_id) #{bookResult.author}
 
                                     tr(class="table-info")
@@ -72,3 +71,15 @@ html
                                     tr(class="table-info")
                                         th(scope="col") Publish Year
                                         td #{bookResult.publish_year}
+
+                    div(class="col-lg-6")
+                        div(class="bs-component")
+                            h2 Do you want to know what other users think about #{bookResult.title}?
+                            p(class="lead") Enter the world of your reviews!
+
+                            if noResults
+                                div(class="alert alert-danger" role="alert") #{noResults}
+
+
+
+

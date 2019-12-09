@@ -95,7 +95,7 @@ app.post("/loginBtn", urlencodedParser, function (req, res) {
     // Empty username and password aren't allowed
     if (username !== "" || password !==""){
         // Getting username and password_hash so the username can be used for a session variable
-        const selectQuery = "SELECT username, password_hash FROM user_data where username=$1;";
+        const selectQuery = "SELECT user_id, username, password_hash FROM user_data where username=$1;";
         const userValue = [username];
 
         dbClient.query(selectQuery, userValue, function (dbError, dbResponse) {
@@ -110,7 +110,9 @@ app.post("/loginBtn", urlencodedParser, function (req, res) {
                     if (hashRes) {
                         console.log("Login success");
                         req.session.user = {
-                            username: dbResponse.rows[0].username
+                            username: dbResponse.rows[0].username,
+                            // userID is a primary key in database -> unique identifier
+                            userID: dbResponse.rows[0].user_id
                         };
                         res.redirect("home");
                     } else {
@@ -329,11 +331,25 @@ app.get("/books/:book_id", function (req, res) {
         dbClient.query(selectQuery, selectValue, function (dbError, dbResponse) {
             if (!dbError){
                 if (dbResponse.rows != ""){
-                    res.render("bookinformation", {
-                        // Information comes in a list, so the first element of this list is required
-                        bookResult: dbResponse.rows[0],
-                        acceptedUsername: req.session.user.username
+                    // Getting all information out of review_information and even more from other tables
+                    const followingQuery = "SELECT review_information.*, user_data.username, book_information.title FROM review_information NATURAL JOIN user_data NATURAL JOIN book_information WHERE book_information.book_id=$1;";
+
+                    // It's easy to stick those queries together
+                    dbClient.query(followingQuery, selectValue, function (followErr, followResponse) {
+                        if (followResponse.rows != ""){
+                            // TODO: Render reviews
+
+                        }
+                        else{
+                            res.render("bookinformation", {
+                                bookResult: dbResponse.rows[0],
+                                acceptedUsername: req.session.user.username,
+                                noResults: "Sorry, there aren't any reviews. Maybe you should start with one?"
+                            })
+                        }
+
                     })
+
                 }
                 else{
                     res.render("home", {
@@ -415,6 +431,40 @@ app.get("/authors/:author_id", function (req, res) {
     }
 });
 
+app.get("/books/:book_id/review", function (req, res) {
+    if (req.session.user != undefined) {
+        // Getting all information out of review_information and even more from other tables
+        const selectQuery = "SELECT review_information.*, user_data.username, book_information.title FROM review_information NATURAL JOIN user_data NATURAL JOIN book_information WHERE book_information.book_id=$1;";
+        // Getting the book_id out of the URL
+        const selectValue = [req.params.book_id];
+
+        dbClient.query(selectQuery, selectValue, function (dbError, dbResponse) {
+            if (!dbError){
+                console.log(dbResponse.rows);
+                if (dbResponse.rows != ""){
+                    console.log("test");
+                }
+                else{
+                    res.render("bookreview", {
+                        searchError: "Sorry, there aren't any reviews. Maybe you want to start with one?",
+                        acceptedUsername: req.session.user.username
+                    })
+
+                }
+            }
+            else{
+                res.render("home", {
+                    searchError: "Something went wrong with the database connection. Please try again later.",
+                    acceptedUsername: req.session.user.username
+                })
+            }
+        })
+    }
+
+    else{
+        res.render("index", {sessionError: "You need to be logged in for this."});
+    }
+});
 
 function initSession(session) {
     if (session.notes == undefined) {
