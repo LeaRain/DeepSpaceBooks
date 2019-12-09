@@ -72,6 +72,30 @@ html
                                         th(scope="col") Publish Year
                                         td #{bookResult.publish_year}
 
+                                    tr(class="table-secondary")
+                                        th(scope="col") Intern book id
+                                        td #{bookResult.book_id}
+
+                        div(class="bs-component")
+                            h2 Write your own review!
+                                form(method="post", action="saveReview/"+bookResult.book_id)
+                                    div(class="form-group")
+                                        p(class="lead") Rate from 1 (I wish I could burn this book multiple times) to 5 (I want to marry this book and love it for all eternity)
+                                        select(class="custom-select", id="reviewSelect", name="reviewSelect")
+                                            option 1
+                                            option 2
+                                            option 3
+                                            option 4
+                                            option 5
+
+                                    div(class="form-group")
+                                        p(class="lead") Write your own text!
+                                        textarea(class="form-control", id="reviewText", name="reviewText", rows="5")
+
+                                    div(class="form-group")
+                                        button(type="submit", class="btn btn-primary btn-lg btn-block") Post review!
+
+
                     div(class="col-lg-6")
                         div(class="bs-component")
                             h2 Do you want to know what other users think about #{bookResult.title}?

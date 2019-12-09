@@ -108,11 +108,10 @@ app.post("/loginBtn", urlencodedParser, function (req, res) {
                 // For checking if the password is right -> compare function because calculating the hash again will cause another hash result
                 bcrypt.compare(password, databaseHash, function (err, hashRes) {
                     if (hashRes) {
-                        console.log("Login success");
                         req.session.user = {
                             username: dbResponse.rows[0].username,
                             // userID is a primary key in database -> unique identifier
-                            userID: dbResponse.rows[0].user_id
+                            userID: dbResponse.rows[0].id
                         };
                         res.redirect("home");
                     } else {
@@ -334,11 +333,10 @@ app.get("/books/:book_id", function (req, res) {
                     // Getting all information out of review_information and even more from other tables
                     const followingQuery = "SELECT review_information.*, user_data.username, book_information.title FROM review_information NATURAL JOIN user_data NATURAL JOIN book_information WHERE book_information.book_id=$1;";
 
-                    // It's easy to stick those queries together
+                    // It's easy to stick those queries together, no check for followErr because this would have also triggered dbError
                     dbClient.query(followingQuery, selectValue, function (followErr, followResponse) {
                         if (followResponse.rows != ""){
                             // TODO: Render reviews
-
                         }
                         else{
                             res.render("bookinformation", {
@@ -431,26 +429,36 @@ app.get("/authors/:author_id", function (req, res) {
     }
 });
 
-app.get("/books/:book_id/review", function (req, res) {
+// Posting the result for a specific book_id -> identifier for database (insert query and value input)
+app.post("/books/saveReview/:book_id", urlencodedParser, function (req, res) {
     if (req.session.user != undefined) {
-        // Getting all information out of review_information and even more from other tables
-        const selectQuery = "SELECT review_information.*, user_data.username, book_information.title FROM review_information NATURAL JOIN user_data NATURAL JOIN book_information WHERE book_information.book_id=$1;";
-        // Getting the book_id out of the URL
-        const selectValue = [req.params.book_id];
+        const userSelectQuery = "SELECT user_id, username FROM user_data WHERE username=$1";
+        const userSelectValue = [req.session.user.username];
 
-        dbClient.query(selectQuery, selectValue, function (dbError, dbResponse) {
+        dbClient.query(userSelectQuery, userSelectValue, function (dbError, dbResponse) {
             if (!dbError){
-                console.log(dbResponse.rows);
-                if (dbResponse.rows != ""){
-                    console.log("test");
-                }
-                else{
-                    res.render("bookreview", {
-                        searchError: "Sorry, there aren't any reviews. Maybe you want to start with one?",
-                        acceptedUsername: req.session.user.username
-                    })
+                let reviewSelect = req.body.reviewSelect;
+                let reviewText = req.body.reviewText;
+                let book_id = req.params.book_id;
+                let user_id = dbResponse.rows[0].user_id;
 
-                }
+                const selectQuery = "SELECT book_id, user_id FROM review_information WHERE book_id=$1 and user_id=$2";
+                const selectValues = [book_id, user_id];
+
+                dbClient.query(selectQuery, selectValues, function (dbError, dbResponse) {
+                    if (dbResponse.rows != ""){
+                        console.log("review found");
+                    }
+                    else{
+                        // Insert all the information about the book -> Current date and current time are database functions
+                        const insertQuery = "INSERT INTO review_information (book_id, user_id, score, review_date, review_time, review_text) values ($1, $2, $3, CURRENT_DATE, CURRENT_TIME, $4);";
+                        const insertValues = [book_id, user_id, reviewSelect, reviewText];
+
+                        dbClient.query(insertQuery, insertValues, function (insertError, insertResponse) {
+                            console.log(insertError, insertResponse);
+                        })
+                    }
+                });
             }
             else{
                 res.render("home", {
@@ -458,7 +466,7 @@ app.get("/books/:book_id/review", function (req, res) {
                     acceptedUsername: req.session.user.username
                 })
             }
-        })
+        });
     }
 
     else{
