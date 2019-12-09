@@ -336,7 +336,11 @@ app.get("/books/:book_id", function (req, res) {
                     // It's easy to stick those queries together, no check for followErr because this would have also triggered dbError
                     dbClient.query(followingQuery, selectValue, function (followErr, followResponse) {
                         if (followResponse.rows != ""){
-                            // TODO: Render reviews
+                            res.render("bookinformation", {
+                                bookResult: dbResponse.rows[0],
+                                acceptedUsername: req.session.user.username,
+                                reviewResults: followResponse.rows
+                            })
                         }
                         else{
                             res.render("bookinformation", {
@@ -447,8 +451,13 @@ app.post("/books/saveReview/:book_id", urlencodedParser, function (req, res) {
 
                 dbClient.query(selectQuery, selectValues, function (dbError, dbResponse) {
                     if (dbResponse.rows != ""){
-                        console.log("review found");
+                        // TODO: Think about rendering all errors to these error page for preventing unexpected behavior
+                        res.render("error", {
+                                searchError: "You are allowed to post one review per book, not more.",
+                                }
+                            )
                     }
+
                     else{
                         // Insert all the information about the book -> Current date and current time are database functions
                         const insertQuery = "INSERT INTO review_information (book_id, user_id, score, review_date, review_time, review_text) values ($1, $2, $3, CURRENT_DATE, CURRENT_TIME, $4);";
