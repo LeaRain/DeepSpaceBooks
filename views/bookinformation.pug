@@ -51,20 +51,21 @@ html
                                         th(scope="col") Book title
                                         td #{bookResult.title}
 
-                                    tr(class="table-primary")
+                                    tr(class="table-secondary")
                                         th(scope="col") Book author
                                         td
                                             // TODO: Get another color for author link
-                                            a(class="text-danger", href="/authors/"+bookResult.author_id) #{bookResult.author}
+                                            a(class="text-dark", href="/authors/"+bookResult.author_id) #{bookResult.author}
 
                                     tr(class="table-info")
                                         th(scope="col") Book co author
                                         if bookResult.coauhor == ""
-                                            td #{bookResult.coauthor}
+                                            td
+                                                p(class="text-dark") #{bookResult.coauthor}
                                         else
                                             td No co author found!
 
-                                    tr(class="table-primary")
+                                    tr(class="table-secondary")
                                         th(scope="col") Book ISBN
                                         td #{bookResult.isbn}
 
