@@ -464,7 +464,11 @@ app.post("/books/saveReview/:book_id", urlencodedParser, function (req, res) {
                         const insertValues = [book_id, user_id, reviewSelect, reviewText];
 
                         dbClient.query(insertQuery, insertValues, function (insertError, insertResponse) {
-                            console.log(insertError, insertResponse);
+                            res.render("success", {
+                                    acceptedUsername: req.session.user.username,
+                                    success: "This review was successful. Thank you"
+                                }
+                            )
                         })
                     }
                 });
