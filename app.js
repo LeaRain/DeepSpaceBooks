@@ -330,16 +330,28 @@ app.get("/books/:book_id", function (req, res) {
         dbClient.query(selectQuery, selectValue, function (dbError, dbResponse) {
             if (!dbError){
                 if (dbResponse.rows != ""){
-                    // Getting all information out of review_information and even more from other tables
-                    const followingQuery = "SELECT review_information.*, user_data.username, book_information.title FROM review_information NATURAL JOIN user_data NATURAL JOIN book_information WHERE book_information.book_id=$1;";
+                    // Getting all information out of review_information and even more from other tables, ORDER BY for a useful order (latest review first)
+                    const followingQuery = "SELECT review_information.*, user_data.username, book_information.title FROM review_information NATURAL JOIN user_data NATURAL JOIN book_information WHERE book_information.book_id=$1 ORDER BY review_date DESC, review_date DESC;";
 
                     // It's easy to stick those queries together, no check for followErr because this would have also triggered dbError
                     dbClient.query(followingQuery, selectValue, function (followErr, followResponse) {
                         if (followResponse.rows != ""){
+                            /*
+                            let reviewCount = followResponse.rows.length
+                            let averageScoreCount = 0;
+
+                            // Iterating over every element of the response for getting the score and calculating thr average later
+                            for (let countReviews = 0; countReviews < reviewCount; countReviews++){
+                                averageScoreCount += followResponse.rows[countReviews].score;
+                            }
+
+                            let averageScore = averageScoreCount/reviewCount;*/
+
                             res.render("bookinformation", {
                                 bookResult: dbResponse.rows[0],
                                 acceptedUsername: req.session.user.username,
-                                reviewResults: followResponse.rows
+                                reviewResults: followResponse.rows,
+                                totalReviews: followResponse.rows.length
                             })
                         }
                         else{

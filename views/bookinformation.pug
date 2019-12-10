@@ -8,6 +8,10 @@ html
         style
             include ./styles/bootstrap.css
 
+        block scripts
+            script(type="text/javascript")
+                include ./js/calculateAverage.js
+
     body
         div(class="container")
             block content
@@ -99,16 +103,28 @@ html
                     div(class="col-lg-6")
                         div(class="bs-component")
                             h2 Do you want to know what other users think about #{bookResult.title}?
-                            p(class="lead") Enter the world of your reviews!
+                            p(class="lead") Enter the world of our reviews!
 
                             if noResults
                                 div(class="alert alert-danger" role="alert") #{noResults}
+
+                            table(class="table table-hover")
+                                thead
+                                    tr(class="table-primary")
+                                    tr(class="table-info")
+                                        th Number of reviews waiting for you
+                                        td(id="totalReviews")
 
                             if reviewResults
                                 each review in reviewResults
                                     div(class="card text-white bg-secondary mb-3", style="max-width: 40rem;")
                                         div(class="card-header")
-                                            h5 Score #{review.score}
+                                            table(class="table table-hover")
+                                                thead
+                                                    tr(class="table-info")
+                                                        th Score
+                                                        td(class="reviewScore") #{review.score}
+
                                                 div(class="progress")
                                                     if review.score == 1
                                                         div(class="progress-bar progress-bar-striped bg-primary", role="progressbar", style="width: 20%", aria-valuenow="50", aria-valuemin="0", aria-valuemax="100")
