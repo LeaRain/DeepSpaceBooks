@@ -51,13 +51,13 @@ function randomizeBookID(){
 }
 
 function randomizeScore(){
-    return getRandomInt(5);
+    return getRandomInt(6);
 }
 
 function randomizeReview(){
     let beginning = ["I think this book ", "The protagonist ", "The story ", "The female character ", "The plot ", "I wish this book ", "It "];
     let mid = ["shows us ", "describes ", "is ", "feels ", "requires ", "wishes ", "tells us about ", "believes in ", "needs "];
-    let ending = ["a beautiful story.", "just wrong.", "a breach in humanity", "more chocolate.", "just dark.", "cold and dump.", "my deepest wish.", "technical issues."]
+    let ending = ["a beautiful story.", "just wrong.", "a breach in humanity.", "more chocolate.", "just dark.", "cold and dump.", "my deepest wish.", "technical issues."];
 
     let beginningRandom = getRandomInt(beginning.length-1);
     let midRandom = getRandomInt(mid.length-1);
