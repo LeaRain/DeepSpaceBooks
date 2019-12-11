@@ -15,8 +15,8 @@ function calculateAverage(){
         totalScore += parseInt(reviewScore[countReviews].innerHTML);
     }
 
-    // TODO: Set average in pug
-    findAverage(totalScore, countReviews)
+    let averageScore = findAverage(totalScore, countReviews);
+    setAverageReviewScore(averageScore);
 }
 
 function setTotalReviews(reviewCount){
@@ -28,4 +28,17 @@ function findAverage(score, length) {
     return (score/length);
 }
 
+function setAverageReviewScore(averageScore){
+    let averageReviewScore = document.getElementById("averageReviewScore");
+
+    // Check for a result of the average score -> there isn't none if there isn't at least one review
+    if (!isNaN(averageScore)) {
+        averageReviewScore.innerHTML = averageScore;
+    }
+
+    else{
+        averageReviewScore.innerHTML = "Sorry, this book hasn't been reviewed."
+    }
+
+}
 
