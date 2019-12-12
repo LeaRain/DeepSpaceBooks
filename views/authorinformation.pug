@@ -41,12 +41,10 @@ html
                             input(class="form-control mr-sm-2", type="text", placeholder="Search", name="keywordInput")
                             button(class="btn btn-secondary my-2 my-sm-0", type="submit") Quick Search
 
-                div(class="row")
-                    div(class="col-lg-6")
-                        div(class="bs-component")
-                            h2 Information about #{firstResult.author_name}, written books
-                            ul(class="list-group")
-                                each result in authorResult
-                                    form(method="get", action="../books/" + result.book_id)
-                                        li(class="list-group-item d-flex justify-content-between align-items-center")
-                                            button(type="submit", class="btn btn-primary") #{result.title}
+
+                h2 Information about #{firstResult.author_name}, written books
+                    ul(class="list-group")
+                        each result in authorResult
+                            form(method="get", action="../books/" + result.book_id)
+                                li(class="list-group-item d-flex justify-content-between align-items-center")
+                                    button(type="submit", class="btn btn-primary") #{result.title}
