@@ -108,11 +108,17 @@ html
                             if noResults
                                 div(class="alert alert-danger" role="alert") #{noResults}
 
+                            else
+                                div(class="progress")
+                                    div(id="averageProgress", class="progress-bar progress-bar-striped bg-primary", role="progressbar", style="width: 0%", aria-valuenow="50", aria-valuemin="0", aria-valuemax="100")
+
+
                             table(class="table table-hover")
                                 thead
                                     tr(class="table-info")
                                         th Average score of this book
                                         td(id="averageReviewScore")
+
                                     tr(class="table-secondary")
                                         th Number of reviews waiting for you
                                         td(id="totalReviews")

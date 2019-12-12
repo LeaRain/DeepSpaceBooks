@@ -59,9 +59,9 @@ function randomizeReview(){
     let mid = ["shows us ", "describes ", "is ", "feels ", "requires ", "wishes ", "tells us about ", "believes in ", "needs "];
     let ending = ["a beautiful story.", "just wrong.", "a breach in humanity.", "more chocolate.", "just dark.", "cold and dump.", "my deepest wish.", "technical issues."];
 
-    let beginningRandom = getRandomInt(beginning.length-1);
-    let midRandom = getRandomInt(mid.length-1);
-    let endingRandom = getRandomInt(ending.length-1);
+    let beginningRandom = getRandomInt(beginning.length);
+    let midRandom = getRandomInt(mid.length);
+    let endingRandom = getRandomInt(ending.length);
 
     // Returning a concatenated string with a potential review
     return beginning[beginningRandom] + mid[midRandom] + ending[endingRandom];
