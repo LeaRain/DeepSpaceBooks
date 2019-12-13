@@ -331,7 +331,7 @@ app.get("/books/:book_id", function (req, res) {
             if (!dbError){
                 if (dbResponse.rows != ""){
                     // Getting all information out of review_information and even more from other tables, ORDER BY for a useful order (latest review first)
-                    const followingQuery = "SELECT review_information.*, user_data.username, book_information.title FROM review_information NATURAL JOIN user_data NATURAL JOIN book_information WHERE book_information.book_id=$1 ORDER BY review_date DESC, review_date DESC;";
+                    const followingQuery = "SELECT review_information.*, user_data.username, book_information.title FROM review_information NATURAL JOIN user_data NATURAL JOIN book_information WHERE book_information.book_id=$1 ORDER BY review_date DESC, review_time DESC;";
 
                     // It's easy to stick those queries together, no check for followErr because this would have also triggered dbError
                     dbClient.query(followingQuery, selectValue, function (followErr, followResponse) {
@@ -495,18 +495,13 @@ app.post("/getCurrentFeed", function (req, res) {
 app.get("/reviewfeed", urlencodedParser, function (req, res) {
     if (req.session.user != undefined) {
         // Get the latest 100 reviews, shouldn't throw an error
-        const selectQuery = "SELECT review_information.*, user_data.username, book_information.*, author_information.author_id FROM review_information NATURAL JOIN user_data NATURAL JOIN book_information NATURAL JOIN author_information ORDER BY review_date DESC, review_date DESC LIMIT 100;";
-
+        const selectQuery = "SELECT review_information.*, user_data.username, book_information.*, author_information.author_id FROM review_information NATURAL INNER JOIN user_data JOIN book_information ON book_information.book_id = review_information.book_id JOIN author_information ON author_information.author_name = book_information.author ORDER BY review_date DESC, review_time DESC LIMIT 100;";
         dbClient.query(selectQuery, function (dbError, dbResponse) {
-            console.log(dbResponse);
             res.render("reviewfeed", {
                 acceptedUsername: req.session.user.username,
                 reviewResults: dbResponse.rows
                 });
         });
-
-
-
     }
     else{
         res.render("index", {sessionError: "You need to be logged in for this."});

@@ -33,6 +33,9 @@ html
                                 a(class="nav-link" href="") My profile (#{acceptedUsername})
 
                             li(class="nav-item")
+                                a(class="nav-link" href="reviewfeed") Review Feed
+
+                            li(class="nav-item")
                                 a(class="nav-link" href="books") All books
 
                             li(class="nav-item")
@@ -85,12 +88,13 @@ html
                                     thead
                                         tr(class="table-info")
                                             th(scope="col") Book title
-                                            td #{review.title}
+                                            td
+                                                a(class="text-dark", href="/books/" + review.book_id) #{review.title}
 
                                         tr(class="table-secondary")
                                             th(scope="col") Book author
                                             td
-                                                a(class="text-dark", href="../authors/" + review.author_id) #{review.author}
+                                                a(class="text-dark", href="/authors/" + review.author_id) #{review.author}
 
                                         tr(class="table-info")
                                             th(scope="col") Book co author
