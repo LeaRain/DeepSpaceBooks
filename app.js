@@ -336,17 +336,6 @@ app.get("/books/:book_id", function (req, res) {
                     // It's easy to stick those queries together, no check for followErr because this would have also triggered dbError
                     dbClient.query(followingQuery, selectValue, function (followErr, followResponse) {
                         if (followResponse.rows != ""){
-                            /*
-                            let reviewCount = followResponse.rows.length
-                            let averageScoreCount = 0;
-
-                            // Iterating over every element of the response for getting the score and calculating thr average later
-                            for (let countReviews = 0; countReviews < reviewCount; countReviews++){
-                                averageScoreCount += followResponse.rows[countReviews].score;
-                            }
-
-                            let averageScore = averageScoreCount/reviewCount;*/
-
                             res.render("bookinformation", {
                                 bookResult: dbResponse.rows[0],
                                 acceptedUsername: req.session.user.username,
@@ -497,6 +486,32 @@ app.post("/books/saveReview/:book_id", urlencodedParser, function (req, res) {
     else{
         res.render("index", {sessionError: "You need to be logged in for this."});
     }
+});
+
+app.post("/getCurrentFeed", function (req, res) {
+    res.redirect("reviewfeed");
+});
+
+app.get("/reviewfeed", urlencodedParser, function (req, res) {
+    if (req.session.user != undefined) {
+        // Get the latest 100 reviews, shouldn't throw an error
+        const selectQuery = "SELECT review_information.*, user_data.username, book_information.*, author_information.author_id FROM review_information NATURAL JOIN user_data NATURAL JOIN book_information NATURAL JOIN author_information ORDER BY review_date DESC, review_date DESC LIMIT 100;";
+
+        dbClient.query(selectQuery, function (dbError, dbResponse) {
+            console.log(dbResponse);
+            res.render("reviewfeed", {
+                acceptedUsername: req.session.user.username,
+                reviewResults: dbResponse.rows
+                });
+        });
+
+
+
+    }
+    else{
+        res.render("index", {sessionError: "You need to be logged in for this."});
+    }
+
 });
 
 function initSession(session) {
