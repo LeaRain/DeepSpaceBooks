@@ -51,7 +51,7 @@ function randomizeBookID(){
 }
 
 function randomizeScore(){
-    return getRandomInt(6);
+    return getRandomInt(5)+1;
 }
 
 function randomizeReview(){
