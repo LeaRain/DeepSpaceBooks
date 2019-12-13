@@ -12,7 +12,7 @@ html
             script(type="text/javascript")
                 include ./js/fieldcheck.js
 
-    body
+    body(onload="initChecking()")
         div(class="container")
             block content
                 h1 Change your password
@@ -51,20 +51,23 @@ html
                 if successMessage
                     div(class="alert alert-dismissible alert-success") #{successMessage}
 
+                if errorMessage
+                    div(class="alert alert-danger" role="alert") #{errorMessage}
+
                 form(method="post", action="changePassword")
                     div(class="form-group")
                         label(name="usernameLabel") Old password
-                        input(type="username", class="form-control", id="oldPassword", name="oldPassword", aria-describedby="usernameHelp", placeholder="Enter username")
+                        input(type="password", class="form-control", id="oldPassword", name="oldPassword", placeholder="Enter old password")
                         small(id="usernameHelp", class="form-text text-muted") Please enter your old password
 
                     div(class="form-group")
                         label Password
-                        input(type="password", class="form-control", id="password", name="password", placeholder="Password")
+                        input(type="password", class="form-control", id="password", name="password", placeholder="Enter new password")
                         small(id="passwordHelp", class="form-text text-muted") Please enter your new password
 
                     div(class="form-group")
                         label Verify Password
-                        input(type="password", class="form-control", id="verifyPassword", name="verifyPassword", placeholder="Password")
+                        input(type="password", class="form-control", id="verifyPassword", name="verifyPassword", placeholder="Enter new password")
                         small(id="passwordHelpVerify", class="form-text text-muted") Please enter your password again
 
                     div(class="form-group")

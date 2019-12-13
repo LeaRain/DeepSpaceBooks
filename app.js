@@ -522,7 +522,77 @@ app.get("/profile", urlencodedParser, function (req, res) {
 });
 
 app.post("/changePassword", urlencodedParser, function (req, res) {
+    if (req.session.user != undefined) {
+        let oldPassword = req.body.oldPassword;
+        let newPassword = req.body.password;
+        let verifyPassword = req.body.verifyPassword;
 
+        if (oldPassword != "" || newPassword != "" || verifyPassword != "") {
+
+            if (newPassword == verifyPassword) {
+
+                const selectQuery = "SELECT password_hash FROM user_data WHERE username=$1";
+                const selectValue = [req.session.user.username];
+
+                dbClient.query(selectQuery, selectValue, function (dbError, dbResponse) {
+                    if (!dbError) {
+                        let databaseHash = dbResponse.rows[0].password_hash;
+                        bcrypt.compare(oldPassword, databaseHash, function (err, hashRes) {
+                            if (hashRes) {
+                                bcrypt.genSalt(saltRounds, function (err, salt) {
+                                        bcrypt.hash(newPassword, salt, function (err, hash) {
+                                            let username = req.session.user.username;
+                                            const insertQuery = "UPDATE user_data SET password_hash=$1 WHERE username=$2";
+                                            const insertValues = [hash, username];
+
+                                            dbClient.query(insertQuery, insertValues, function (insertError, insertResponse) {
+                                                if (!insertError){
+                                                    res.render("profile", {
+                                                        acceptedUsername: req.session.user.username,
+                                                        successMessage: "Your password was changed!"
+                                                    })
+                                                }
+                                                else{
+                                                    res.render("profile", {
+                                                        acceptedUsername: req.session.user.username,
+                                                        errorMessage: "Something went wrong with the database connection. Please try again later."
+                                                    })
+                                                }
+                                            })
+                                        })
+                                    }
+                                )}
+                            else {
+                                res.render("profile", {
+                                    acceptedUsername: req.session.user.username,
+                                    errorMessage: "Your old password is wrong!"
+                                })
+                            }
+                        });
+                    } else {
+                        res.render("profile", {
+                            acceptedUsername: req.session.user.username,
+                            errorMessage: "Something went wrong with the database connection. Please try again later."
+                        })
+                    }
+                })
+            } else {
+                res.render("profile", {
+                    acceptedUsername: req.session.user.username,
+                    errorMessage: "The new password didn't match with the verify option."
+                })
+            }
+        }
+        else{
+            res.render("profile", {
+                acceptedUsername: req.session.user.username,
+                errorMessage: "Please check for empty fields."
+            })
+        }
+    }
+    else{
+        res.render("index", {sessionError: "You need to be logged in for this."});
+    }
 });
 
 function initSession(session) {
