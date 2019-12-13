@@ -451,8 +451,8 @@ app.post("/books/saveReview/:book_id", urlencodedParser, function (req, res) {
                 const selectValues = [book_id, user_id];
 
                 dbClient.query(selectQuery, selectValues, function (dbError, dbResponse) {
+                    // Database may be check for unique book_id and user_id but there could still an other database error arrive
                     if (dbResponse.rows != ""){
-                        // TODO: Think about rendering all errors to these error page for preventing unexpected behavior
                         res.render("error", {
                                 searchError: "You are allowed to post one review per book, not more.",
                                 }
@@ -506,6 +506,22 @@ app.get("/reviewfeed", urlencodedParser, function (req, res) {
     else{
         res.render("index", {sessionError: "You need to be logged in for this."});
     }
+
+});
+
+app.get("/profile", urlencodedParser, function (req, res) {
+    if (req.session.user != undefined) {
+        res.render("profile", {
+            acceptedUsername: req.session.user.username
+        });
+    }
+
+    else{
+        res.render("index", {sessionError: "You need to be logged in for this."});
+    }
+});
+
+app.post("/changePassword", urlencodedParser, function (req, res) {
 
 });
 

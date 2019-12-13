@@ -1,0 +1,72 @@
+doctype html
+html
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
+        // Changing linked bootstrap.css to own hosted bootstrap.css -> Control of own css in case for downtime of bootstrap server, data sovereignty
+        // Choosing of a dark theme, suitable for a project called "Deep Space Books"
+        style
+            include ./styles/bootstrap.css
+
+        block scripts
+            script(type="text/javascript")
+                include ./js/fieldcheck.js
+
+    body
+        div(class="container")
+            block content
+                h1 Change your password
+
+                nav(class="navbar navbar-expand-lg navbar-dark bg-primary")
+                    a(class="navbar-brand" href="#")
+                        button(class="navbar-toggler", type="button", data-toggle="collapse", data-target="#navbarColor01", aria-controls="navbarColor01", aria-expanded="false", aria-label="Toggle navigation")
+                            span(class="navbar-toggler-icon")
+
+                    div(class="collapse navbar-collapse" id="navbarColor01")
+                        ul(class="navbar-nav mr-auto")
+                            li(class="nav-item active")
+                                a(class="nav-link" href="home") Home
+                                    span(class="sr-only") (current)
+
+                            li(class="nav-item")
+                                a(class="nav-link" href="profile") My profile (#{acceptedUsername})
+
+                            li(class="nav-item")
+                                a(class="nav-link" href="reviewfeed") Review Feed
+
+                            li(class="nav-item")
+                                a(class="nav-link" href="books") All books
+
+                            li(class="nav-item")
+                                a(class="nav-link" href="authors") All authors
+
+                            li(class="nav-item")
+                                a(class="nav-link" href="logout") Logout
+
+
+                        form(method="post", action="keywordSearchBtn", class="form-inline my-2 my-lg-0")
+                            input(class="form-control mr-sm-2", type="text", placeholder="Search", name="keywordInput")
+                            button(class="btn btn-secondary my-2 my-sm-0", type="submit") Quick Search
+
+                if successMessage
+                    div(class="alert alert-dismissible alert-success") #{successMessage}
+
+                form(method="post", action="changePassword")
+                    div(class="form-group")
+                        label(name="usernameLabel") Old password
+                        input(type="username", class="form-control", id="oldPassword", name="oldPassword", aria-describedby="usernameHelp", placeholder="Enter username")
+                        small(id="usernameHelp", class="form-text text-muted") Please enter your old password
+
+                    div(class="form-group")
+                        label Password
+                        input(type="password", class="form-control", id="password", name="password", placeholder="Password")
+                        small(id="passwordHelp", class="form-text text-muted") Please enter your new password
+
+                    div(class="form-group")
+                        label Verify Password
+                        input(type="password", class="form-control", id="verifyPassword", name="verifyPassword", placeholder="Password")
+                        small(id="passwordHelpVerify", class="form-text text-muted") Please enter your password again
+
+                    div(class="form-group")
+                        button(type="submit", class="btn btn-primary btn-lg btn-block") Change password!
+

@@ -3,16 +3,16 @@ function initChecking() {
 }
 
 function valueInteraction() {
-    let passwordStatus = document.getElementById("registrationPassword");
-    let verifyStatus = document.getElementById("registrationVerifyPassword");
+    let passwordStatus = document.getElementById("password");
+    let verifyStatus = document.getElementById("verifyPassword");
 
     passwordStatus.addEventListener("keyup", checkPasswords);
     verifyStatus.addEventListener("keyup", checkPasswords);
 }
 
 function checkPasswords() {
-    let passwordStatus = document.getElementById("registrationPassword");
-    let verifyStatus = document.getElementById("registrationVerifyPassword");
+    let passwordStatus = document.getElementById("password");
+    let verifyStatus = document.getElementById("verifyPassword");
 
     if (passwordStatus.value !== verifyStatus.value){
         passwordStatus.className = "form-control is-invalid";

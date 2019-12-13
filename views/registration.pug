@@ -27,12 +27,12 @@ html
 
                     div(class="form-group")
                         label Password
-                        input(type="password", class="form-control", id="registrationPassword", name="registrationPassword", placeholder="Password")
+                        input(type="password", class="form-control", id="password", name="registrationPassword", placeholder="Password")
                         small(id="passwordHelp", class="form-text text-muted") Please enter your password
 
                     div(class="form-group")
                         label Verify Password
-                        input(type="password", class="form-control", id="registrationVerifyPassword", name="registrationVerifyPassword", placeholder="Password")
+                        input(type="password", class="form-control", id="verifyPassword", name="registrationVerifyPassword", placeholder="Password")
                         small(id="passwordHelpVerify", class="form-text text-muted") Please enter your password again
 
                     div(class="form-group")
@@ -40,5 +40,3 @@ html
 
                     if registrationError
                         div(class="alert alert-danger" role="alert") #{registrationError}
-
-                    // TODO: Get an registration error and remove registrationerror.pug
