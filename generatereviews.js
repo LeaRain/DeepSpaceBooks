@@ -1,13 +1,13 @@
 const pg = require("pg");
 
 function initDatabase() {
-    /* COMMENT THIS PART IN FOR LOCALHOSTED EDITION (AND THE REST OUT)
+    // COMMENT THIS PART IN FOR LOCALHOSTED EDITION (AND THE REST OUT)
         return new pg.Client({
             host: "localhost",
             user: "weirdjs",
             database: "jsexercise"
         });
-     */
+    /*
     // COMMENT THIS PART IN FOR DOCKER (AND THE REST OUT)
     let CON_STRING = process.env.DB_CON_STRING;
     if (CON_STRING == undefined) {
@@ -16,6 +16,8 @@ function initDatabase() {
     }
     // For Docker, SSL can be ignored
     return new pg.Client(CON_STRING)
+
+     */
 }
 
 

@@ -9,7 +9,16 @@ and reviews missing. With for example 5 users, 25000 reviews are possible.
 Heroku shouldn't explode. Because of this, there is a Professional Edition.
 
 #### Community Edition
-to do
+##### Install by Heroku
+Please install the Node JS part with the necessary packages and connect 
+with the Heroku PostgreSQL database with the following connection string:   
+postgres://ngzfzadntqjdem:31d89d7859455fafdf2af3bf804c7e69376901bc1f42689c94940191249f1d92@ec2-54-217-234-157.eu-west-1.compute.amazonaws.com:5432/d13114mb2mod5v
+
+* host: ec2-54-217-234-157.eu-west-1.compute.amazonaws.com
+* database: d13114mb2mod5v
+* username: ngzfzadntqjdem
+* password: 31d89d7859455fafdf2af3bf804c7e69376901bc1f42689c94940191249f1d92
+
 
 #### Professional Edition
 ##### Install by hand
