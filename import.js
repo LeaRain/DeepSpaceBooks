@@ -3,12 +3,21 @@ const fs = require("fs");
 const pg = require("pg");
 
 function initDatabase() {
-// TODO: Change to heroku and connection string (finally, at the end)
+/* COMMENT THIS PART IN FOR LOCALHOSTED EDITION (AND THE REST OUT)
     return new pg.Client({
         host: "localhost",
         user: "weirdjs",
         database: "jsexercise"
     });
+ */
+    // COMMENT THIS PART IN FOR LOCALHOSTED EDITION (AND THE REST OUT)
+    let CON_STRING = process.env.DB_CON_STRING;
+    if (CON_STRING == undefined) {
+        console.log("Error: Environment variable DB_CON_STRING not set!");
+        process.exit(1);
+    }
+    // For Docker, SSL can be ignored
+    return new pg.Client(CON_STRING)
 }
 
 function main(){

@@ -20,6 +20,14 @@ Please load this dump in your PostgreSQL database and check for:
 * database: jsexercise   
 * password isn't required
 
+Please check also for commented and uncommented parts of the code and 
+look for the instructions in the comments.
+
+##### Install by Docker
+This repository contains some Docker related files. Run them with docker 
+compose build and docker compose up. Be sure to comment the necessary parts 
+of the code in and the rest out.
+
 ## Features
 Besides the required tasks, Deep Space Book has some special features:
 * Different search options: Quick search (based on keyword search), keyword
@@ -38,7 +46,9 @@ Besides the required tasks, Deep Space Book has some special features:
 * One person, one review: Every person can post one review.     
 * Additional review information: See who wrote a review with date and time    
 * Script generatereviews.js: Generator for even more (static) reviews 
-based on randomness   
+based on randomness -> Only for local hosted version recommended  (row
+limit of Heroku)
+* Docker support
 
 ## Coding Notes 
 ### var vs. let

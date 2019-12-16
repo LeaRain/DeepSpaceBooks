@@ -1,0 +1,20 @@
+# docker-compose.yml
+version: "3"
+services:
+  app:
+    build: .
+    depends_on:
+      - postgres
+    ports:
+      - "3000:3000"
+      - "9229:9229"
+    environment:
+      DB_CON_STRING: postgres://weirdjs:weirdjs@postgres:5432/weirdjs 
+
+  postgres:
+    image: postgres:12.1-alpine
+    environment:
+      POSTGRES_USER: weirdjs 
+      POSTGRES_PASSWORD: weirdjs 
+    volumes:
+      - ./jsexercise.sql:/docker-entrypoint-initdb.d/1-jsexercise.sql   

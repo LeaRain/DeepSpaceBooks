@@ -8,14 +8,25 @@ const session = require("express-session");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
+/* COMMENT IN FOR LOCAL DATABASE WITH THESE SPECIFICATION (AND THE REST OUT)
 // Instead of using a connection string, for local use and development, there is a simple connection with my own "server".
 // Yes, there isn't a password and for local development, this is okay, I'm the only person with access to my database in my networks.
-// TODO: Change to heroku and connection string (finally, at the end)
 let dbClient = new pg.Client({
     host: "localhost",
     user: "weirdjs",
     database: "jsexercise"
-});
+});*/
+
+// COMMENT IN FOR DOCKER (AND THE REST OUT)
+let CON_STRING = process.env.DB_CON_STRING;
+console.log(CON_STRING);
+if (CON_STRING == undefined) {
+    console.log("Error: Environment variable DB_CON_STRING not set!");
+    process.exit(1);
+}
+
+let dbClient = new pg.Client(CON_STRING);
+// For Docker, SSL can be ignored
 dbClient.connect();
 
 const urlencodedParser = bodyParser.urlencoded({
