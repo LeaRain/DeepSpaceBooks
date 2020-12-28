@@ -13,7 +13,7 @@ const saltRounds = 10;
 // Yes, there isn't a password and for local development, this is okay, I'm the only person with access to my database in my networks.
 let dbClient = new pg.Client({
     host: "localhost",
-    user: "weirdjs",
+    user: "postgres",
     database: "jsexercise"
 });
 /*
@@ -105,11 +105,17 @@ app.post("/loginBtn", urlencodedParser, function (req, res) {
     let username = req.body.loginUsername;
     let password = req.body.loginPassword;
 
+    console.log(username, password);
+
     // Empty username and password aren't allowed
     if (username !== "" || password !==""){
         // Getting username and password_hash so the username can be used for a session variable
         const selectQuery = "SELECT user_id, username, password_hash FROM user_data where username=$1;";
         const userValue = [username];
+
+	dbClient.query("SELECT 42;", function(dbError, dbResponse) {
+		console.log(dbError, dbResponse);
+	})
 
         dbClient.query(selectQuery, userValue, function (dbError, dbResponse) {
             // If there isn't a database output, this if will be proceed and render an error with no such username

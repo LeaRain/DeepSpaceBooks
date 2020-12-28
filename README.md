@@ -1,3 +1,7 @@
+# General Information
+
+Deep Space Books is a previous project for the module media computing at OTH Regensburg. The goal was to create a website with NodeJS, PostgreSQL and pug for finding and rating different kinds of books. The following information contains the part of the projects. It's definetely not meant for productive use and more an example web page. The packages are too old for any kind of productive usage. But please feel free to be inspired and use some elements for your project.
+
 # Deep Space Books
 Deep Space Books was build with Manjaro 18.1.4 Juhraya, PostgreSQL 12 and NodeJS 13.3.0. 
 The container deployment part was build with Docker 19.03.5-ce.
